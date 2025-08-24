@@ -1,0 +1,249 @@
+# Smithery AI Configuration for TestRail MCP Server
+# This file defines the build and deployment configuration for Smithery AI publishing
+
+version: "1.0"
+
+# Project metadata
+project:
+  name: "testrail-mcp-server"
+  title: "TestRail MCP Server"
+  description: "Comprehensive TestRail integration via Model Context Protocol with 65+ tools for test management, reporting, and automation"
+  version: "1.0.0"
+  license: "MIT"
+  homepage: "https://github.com/samuelvinay91/testrail-mcp"
+  repository: "https://github.com/samuelvinay91/testrail-mcp.git"
+  author: "TestRail MCP Team"
+  
+  # Keywords for discoverability
+  keywords:
+    - "testrail"
+    - "mcp"
+    - "model-context-protocol"
+    - "test-management"
+    - "test-automation"
+    - "qa"
+    - "testing"
+    - "test-cases"
+    - "test-runs"
+    - "api-integration"
+    - "typescript"
+    - "node.js"
+
+# Build configuration
+build:
+  # Docker build settings
+  docker:
+    dockerfile: "Dockerfile"
+    context: "."
+    platform: "linux/amd64,linux/arm64"
+    
+    # Build arguments
+    args:
+      NODE_ENV: "production"
+    
+    # Target stage for multi-stage builds
+    target: "production"
+  
+  # Environment requirements
+  requirements:
+    node: ">=16.0.0"
+    npm: ">=8.0.0"
+  
+  # Build commands (if not using Docker)
+  commands:
+    install: "npm ci"
+    build: "npm run build"
+    test: "npm test"
+    lint: "npm run lint"
+  
+  # Files to include in the build
+  include:
+    - "src/**/*"
+    - "package.json"
+    - "package-lock.json"
+    - "tsconfig.json"
+    - "README.md"
+    - "LICENSE"
+    - "docs/**/*"
+    - "examples/**/*"
+  
+  # Files to exclude from the build
+  exclude:
+    - "node_modules"
+    - "tests"
+    - "coverage"
+    - "*.test.*"
+    - "*.spec.*"
+    - ".git"
+    - ".github"
+    - "*.log"
+    - ".env*"
+    - "docker-compose*"
+    - "Dockerfile.dev"
+    - "monitoring"
+    - "nginx.conf"
+    - "setup-agents.js"
+
+# Runtime configuration
+runtime:
+  # Port configuration
+  port: 3000
+  
+  # Health check configuration
+  health_check:
+    path: "/"
+    interval: 30
+    timeout: 10
+    retries: 3
+    start_period: 5
+  
+  # Environment variables
+  environment:
+    NODE_ENV: "production"
+    LOG_LEVEL: "info"
+  
+  # Required environment variables (user must provide)
+  required_env:
+    - "TESTRAIL_BASE_URL"
+    - "TESTRAIL_USERNAME" 
+    - "TESTRAIL_API_KEY"
+  
+  # Optional environment variables with defaults
+  optional_env:
+    DEFAULT_PROJECT_ID: "1"
+    DEFAULT_SUITE_ID: "1"
+    RATE_LIMIT_REQUESTS_PER_MINUTE: "60"
+    CACHE_TTL: "300"
+
+# Service configuration
+service:
+  # Service type
+  type: "mcp-server"
+  
+  # Categories for the marketplace
+  categories:
+    - "development-tools"
+    - "testing"
+    - "integration"
+    - "automation"
+  
+  # Service capabilities
+  capabilities:
+    - "test-management"
+    - "api-integration"
+    - "reporting"
+    - "analytics"
+    - "bulk-operations"
+    - "real-time-updates"
+  
+  # Protocol support
+  protocols:
+    - "mcp"
+    - "http"
+    - "stdio"
+  
+  # Integration compatibility
+  integrations:
+    - "claude-desktop"
+    - "cursor-ide"
+    - "windsurf-ide"
+    - "vscode-continue"
+    - "github-copilot"
+    - "cody"
+    - "jetbrains"
+
+# Documentation
+documentation:
+  readme: "README.md"
+  guides:
+    - "docs/guides/getting-started.md"
+    - "docs/guides/coding-agents-setup.md"
+    - "docs/guides/usage-examples.md"
+    - "docs/guides/autospectra-integration.md"
+  api_docs: "docs/api/"
+  examples: "examples/"
+
+# Security and compliance
+security:
+  # Vulnerability scanning
+  scan: true
+  
+  # Security best practices
+  non_root_user: true
+  minimal_base_image: true
+  no_secrets_in_image: true
+  
+  # Compliance
+  compliance:
+    - "GDPR"
+    - "SOC2"
+
+# Testing configuration
+testing:
+  # Test commands
+  unit: "npm run test:unit"
+  integration: "npm run test:integration"
+  coverage: "npm run test:coverage"
+  
+  # Test requirements
+  min_coverage: 80
+  
+  # Test environments
+  environments:
+    - "node:16"
+    - "node:18"
+    - "node:20"
+
+# Deployment configuration
+deployment:
+  # Deployment strategies
+  strategies:
+    - "rolling"
+    - "blue-green"
+  
+  # Resource requirements
+  resources:
+    memory: "512Mi"
+    cpu: "500m"
+    
+  # Scaling configuration
+  scaling:
+    min_replicas: 1
+    max_replicas: 10
+    target_cpu: 70
+
+# Monitoring and observability
+monitoring:
+  # Metrics endpoints
+  metrics:
+    enabled: true
+    path: "/metrics"
+    port: 9090
+  
+  # Logging configuration
+  logging:
+    level: "info"
+    format: "json"
+    
+  # Tracing
+  tracing:
+    enabled: false
+
+# Support and maintenance
+support:
+  # Support channels
+  channels:
+    - type: "github"
+      url: "https://github.com/samuelvinay91/testrail-mcp/issues"
+    - type: "documentation"
+      url: "https://github.com/samuelvinay91/testrail-mcp/blob/main/README.md"
+  
+  # Maintenance schedule
+  maintenance:
+    window: "Sunday 02:00-04:00 UTC"
+    frequency: "monthly"
+  
+  # SLA commitments
+  sla:
+    uptime: "99.9%"
+    response_time: "24h"

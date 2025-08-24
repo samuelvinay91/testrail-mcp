@@ -12,6 +12,7 @@
     "build": "tsc && chmod +x dist/index.js",
     "build:watch": "tsc --watch",
     "setup-agents": "node setup-agents.js",
+    "validate-smithery": "node validate-smithery.js",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
