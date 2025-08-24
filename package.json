@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "Comprehensive TestRail MCP Server for managing test cases, runs, results, and reporting through Model Context Protocol",
   "main": "dist/index.js",
+  "module": "src/smithery.ts",
+  "type": "module",
   "bin": {
     "testrail-mcp-server": "dist/index.js"
   },
   "scripts": {
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
+    "dev:smithery": "npx @smithery/cli dev",
     "build": "tsc && chmod +x dist/index.js",
+    "build:smithery": "npx @smithery/cli build",
     "build:watch": "tsc --watch",
     "setup-agents": "node setup-agents.js",
     "validate-smithery": "node validate-smithery.js",

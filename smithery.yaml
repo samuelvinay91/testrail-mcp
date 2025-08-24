@@ -1,7 +1,18 @@
 # Smithery AI Configuration for TestRail MCP Server
-# This file defines the build and deployment configuration for Smithery AI publishing
+# Supports both TypeScript runtime and custom Docker deployment
 
+# Primary configuration: TypeScript runtime (recommended)
+runtime: "typescript"
 version: "1.0"
+
+# Fallback configuration: Custom Docker (if TypeScript runtime fails)
+# Uncomment below section if you need Docker-based deployment
+# build:
+#   docker:
+#     dockerfile: "Dockerfile"
+#     context: "."
+#     platform: "linux/amd64,linux/arm64"
+#     target: "production"
 
 # Project metadata
 project:

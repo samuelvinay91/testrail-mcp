@@ -5,8 +5,8 @@
  * Validates that all required files and configurations are present for successful publishing
  */
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
 
 const colors = {
   reset: '\x1b[0m',
@@ -117,11 +117,8 @@ function validateSmitheryConfig() {
     const smitheryContent = fs.readFileSync('smithery.yaml', 'utf8');
     
     const requiredSections = [
-      'version',
-      'project',
-      'build',
       'runtime',
-      'service'
+      'version'
     ];
     
     let valid = true;
@@ -133,6 +130,13 @@ function validateSmitheryConfig() {
         valid = false;
       }
     });
+    
+    // Check for TypeScript runtime
+    if (smitheryContent.includes('runtime: "typescript"')) {
+      log.success('smithery.yaml configured for TypeScript runtime');
+    } else {
+      log.warn('smithery.yaml not configured for TypeScript runtime');
+    }
     
     return valid;
   } catch (error) {
