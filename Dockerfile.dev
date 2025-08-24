@@ -1,0 +1,39 @@
+# Development Dockerfile for TestRail MCP Server
+# Optimized for development with hot reload
+
+FROM node:18-alpine
+
+# Install development tools
+RUN apk add --no-cache git
+
+# Create app directory
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup -g 1001 -S testrail && \
+    adduser -S testrail -u 1001
+
+# Copy package files
+COPY package*.json ./
+COPY tsconfig.json ./
+
+# Install all dependencies (including dev dependencies)
+RUN npm ci
+
+# Copy source code
+COPY src/ ./src/
+COPY tests/ ./tests/
+COPY docs/ ./docs/
+COPY examples/ ./examples/
+
+# Set ownership
+RUN chown -R testrail:testrail /app
+
+# Switch to non-root user
+USER testrail
+
+# Expose port
+EXPOSE 3000
+
+# Development command with hot reload
+CMD ["npm", "run", "dev"]
