@@ -76,8 +76,8 @@ testrail-mcp-server/
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/testrail-mcp-server.git
-cd testrail-mcp-server
+git clone https://github.com/samuelvinay91/testrail-mcp.git
+cd testrail-mcp
 
 # Install dependencies
 npm install
@@ -89,7 +89,73 @@ cp .env.example .env
 # TESTRAIL_BASE_URL=https://your-instance.testrail.io
 # TESTRAIL_USERNAME=your.email@company.com
 # TESTRAIL_API_KEY=your-api-key-here
+
+# Build and start
+npm run build
+npm start
 ```
+
+### 🤖 Quick Setup with AI Coding Agents
+
+**Interactive Setup (Recommended)**:
+```bash
+# Run the interactive setup script
+npm run setup-agents
+
+# Follow the prompts to configure your preferred coding agent
+# Supports: Claude Desktop, Cursor IDE, Windsurf IDE, Continue (VS Code)
+```
+
+**Manual Configuration Examples**:
+
+**Claude Desktop**:
+```json
+// ~/.claude-desktop/config.json
+{
+  "mcpServers": {
+    "testrail": {
+      "command": "node",
+      "args": ["path/to/testrail-mcp/dist/index.js"],
+      "env": {
+        "TESTRAIL_BASE_URL": "https://yourcompany.testrail.io",
+        "TESTRAIL_USERNAME": "your.email@company.com",
+        "TESTRAIL_API_KEY": "your-api-key"
+      }
+    }
+  }
+}
+```
+
+**Cursor IDE**:
+```json
+// Cursor Settings > MCP Configuration
+{
+  "mcp": {
+    "servers": [{
+      "name": "testrail",
+      "command": "node",
+      "args": ["./dist/index.js"],
+      "cwd": "/path/to/testrail-mcp"
+    }]
+  }
+}
+```
+
+**Windsurf IDE**:
+```json
+// .windsurf/mcp-config.json
+{
+  "servers": {
+    "testrail": {
+      "command": "node",
+      "args": ["path/to/testrail-mcp/dist/index.js"],
+      "transport": "stdio"
+    }
+  }
+}
+```
+
+📄 **See [complete setup guide](./docs/guides/coding-agents-setup.md) for detailed instructions with Claude, Cursor, Windsurf, Continue, Cody, and more!**
 
 ### Development
 
@@ -193,6 +259,9 @@ The TestRail MCP Server provides the following tools:
 
 - [API Documentation](./docs/api/) - Detailed API reference
 - [User Guides](./docs/guides/) - Step-by-step tutorials
+- [Coding Agents Setup](./docs/guides/coding-agents-setup.md) - Integration with Claude, Cursor, Windsurf, and other AI tools
+- [AutoSpectra Integration](./docs/guides/autospectra-integration.md) - Advanced test automation integration
+- [Getting Started](./docs/guides/getting-started.md) - Complete setup guide
 - [Examples](./examples/) - Code examples and use cases
 
 ## 🧪 Testing
