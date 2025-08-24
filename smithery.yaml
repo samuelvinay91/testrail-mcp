@@ -1,9 +1,9 @@
 # Smithery AI Configuration for TestRail MCP Server
-# Supports both TypeScript runtime and custom Docker deployment
+# Optimized for TypeScript runtime deployment with proper test credentials
 
 # Primary configuration: TypeScript runtime (recommended)
 runtime: "typescript"
-version: "1.0"
+version: "1.0.0"
 
 # Fallback configuration: Custom Docker (if TypeScript runtime fails)
 # Uncomment below section if you need Docker-based deployment
@@ -42,7 +42,15 @@ project:
 
 # Build configuration
 build:
-  # Docker build settings
+  # TypeScript build settings (primary)
+  typescript:
+    entry: "src/smithery.ts"
+    tsconfig: "tsconfig.json"
+    output_dir: "dist"
+    source_maps: true
+    minify: false
+  
+  # Docker build settings (fallback)
   docker:
     dockerfile: "Dockerfile"
     context: "."
@@ -59,6 +67,7 @@ build:
   requirements:
     node: ">=16.0.0"
     npm: ">=8.0.0"
+    typescript: ">=5.0.0"
   
   # Build commands (if not using Docker)
   commands:
@@ -66,6 +75,13 @@ build:
     build: "npm run build"
     test: "npm test"
     lint: "npm run lint"
+    validate: "npm run validate-smithery"
+  
+  # Build optimization
+  optimization:
+    tree_shaking: true
+    dead_code_elimination: true
+    bundle_splitting: false
   
   # Files to include in the build
   include:
@@ -125,6 +141,48 @@ runtime:
     DEFAULT_SUITE_ID: "1"
     RATE_LIMIT_REQUESTS_PER_MINUTE: "60"
     CACHE_TTL: "300"
+
+# Test configuration for Smithery AI
+test:
+  # Test profile configuration
+  profile:
+    name: "testrail-test-profile"
+    description: "Test profile for TestRail MCP Server with working credentials"
+    
+    # Test environment variables
+    environment:
+      TESTRAIL_BASE_URL: "https://raphaenterprises.testrail.io/"
+      TESTRAIL_USERNAME: "vinaykumar.badugu@raphaenterprises.ai"
+      TESTRAIL_API_KEY: "UvPAy/YuxxgHfD0vYF00-eE.60WUbmzkFLZ3reFDH"
+      DEFAULT_PROJECT_ID: "1"
+      DEFAULT_SUITE_ID: "1"
+      NODE_ENV: "production"
+      LOG_LEVEL: "info"
+    
+    # Test validation
+    validation:
+      # Connection test
+      connection_test: true
+      # Tool discovery test
+      tool_discovery: true
+      # Basic functionality test
+      functionality_test: true
+  
+  # Test scenarios
+  scenarios:
+    - name: "connection_test"
+      description: "Test TestRail API connection"
+      tool: "test_connection"
+      expected_result: "success"
+    
+    - name: "project_list"
+      description: "List TestRail projects"
+      tool: "get_projects"
+      expected_result: "array"
+    
+    - name: "tool_discovery"
+      description: "Verify all tools are discoverable"
+      expected_tools: 65
 
 # Service configuration
 service:
@@ -188,6 +246,19 @@ security:
   compliance:
     - "GDPR"
     - "SOC2"
+  
+  # Credential validation
+  credentials:
+    # Validate TestRail credentials format
+    validation:
+      testrail_url_format: "https://*.testrail.io/"
+      api_key_format: "^[A-Za-z0-9+/]+-[A-Za-z0-9+/]+\.[A-Za-z0-9+/]+$"
+      username_format: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+    # Security requirements
+    requirements:
+      encrypted_storage: true
+      secure_transmission: true
+      audit_logging: true
 
 # Testing configuration
 testing:
@@ -204,6 +275,15 @@ testing:
     - "node:16"
     - "node:18"
     - "node:20"
+  
+  # Smithery test configuration
+  smithery:
+    # Enable comprehensive testing
+    enabled: true
+    # Test timeout in seconds
+    timeout: 60
+    # Retry attempts for failed tests
+    retries: 3
 
 # Deployment configuration
 deployment:
@@ -222,6 +302,31 @@ deployment:
     min_replicas: 1
     max_replicas: 10
     target_cpu: 70
+  
+  # Smithery AI specific deployment settings
+  smithery:
+    # Enable auto-deployment
+    auto_deploy: true
+    # Deployment region preference
+    region: "us-east-1"
+    # Enable health monitoring
+    health_monitoring: true
+    # Custom deployment hooks
+    hooks:
+      pre_deploy: "npm run validate-smithery"
+      post_deploy: "npm run test:connection"
+    # Rollback configuration
+    rollback:
+      enabled: true
+      max_failures: 3
+    # Environment-specific settings
+    environments:
+      production:
+        auto_scale: true
+        backup_enabled: true
+      staging:
+        auto_scale: false
+        backup_enabled: false
 
 # Monitoring and observability
 monitoring:
