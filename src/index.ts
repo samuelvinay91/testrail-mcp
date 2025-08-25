@@ -355,8 +355,8 @@ class TestRailMCPServer {
               items: {
                 type: 'object',
                 properties: {
-                  content: { type: 'string' },
-                  expected: { type: 'string' },
+                  content: { type: 'string', description: 'Step content' },
+                  expected: { type: 'string', description: 'Expected result for step' },
                 },
               },
               description: 'Detailed test steps',
@@ -379,27 +379,28 @@ class TestRailMCPServer {
               type: 'number',
               description: 'Test case ID',
             },
-            title: { type: 'string' },
-            templateId: { type: 'number' },
-            typeId: { type: 'number' },
-            priorityId: { type: 'number' },
-            milestoneId: { type: 'number' },
-            refs: { type: 'string' },
-            estimate: { type: 'string' },
-            preconditions: { type: 'string' },
-            steps: { type: 'string' },
-            expectedResult: { type: 'string' },
+            title: { type: 'string', description: 'Test case title' },
+            templateId: { type: 'number', description: 'Template ID' },
+            typeId: { type: 'number', description: 'Test case type ID' },
+            priorityId: { type: 'number', description: 'Priority ID' },
+            milestoneId: { type: 'number', description: 'Milestone ID' },
+            refs: { type: 'string', description: 'References' },
+            estimate: { type: 'string', description: 'Time estimate' },
+            preconditions: { type: 'string', description: 'Test preconditions' },
+            steps: { type: 'string', description: 'Test steps' },
+            expectedResult: { type: 'string', description: 'Expected result' },
             stepsDetailed: {
               type: 'array',
               items: {
                 type: 'object',
                 properties: {
-                  content: { type: 'string' },
-                  expected: { type: 'string' },
+                  content: { type: 'string', description: 'Step content' },
+                  expected: { type: 'string', description: 'Expected result for step' },
                 },
               },
+              description: 'Detailed test steps with individual expected results',
             },
-            customFields: { type: 'object' },
+            customFields: { type: 'object', description: 'Custom field values' },
           },
           required: ['caseId'],
         },
@@ -512,10 +513,10 @@ class TestRailMCPServer {
               type: 'number',
               description: 'Run ID',
             },
-            name: { type: 'string' },
-            description: { type: 'string' },
-            milestoneId: { type: 'number' },
-            assignedToId: { type: 'number' },
+            name: { type: 'string', description: 'Run name' },
+            description: { type: 'string', description: 'Run description' },
+            milestoneId: { type: 'number', description: 'Milestone ID' },
+            assignedToId: { type: 'number', description: 'Assigned user ID' },
           },
           required: ['runId'],
         },
@@ -623,10 +624,10 @@ class TestRailMCPServer {
               items: {
                 type: 'object',
                 properties: {
-                  content: { type: 'string' },
-                  expected: { type: 'string' },
-                  actual: { type: 'string' },
-                  statusId: { type: 'number' },
+                  content: { type: 'string', description: 'Step content' },
+                  expected: { type: 'string', description: 'Expected result' },
+                  actual: { type: 'string', description: 'Actual result' },
+                  statusId: { type: 'number', description: 'Status ID for this step' },
                 },
               },
               description: 'Step-by-step results',
@@ -654,27 +655,27 @@ class TestRailMCPServer {
               items: {
                 type: 'object',
                 properties: {
-                  testId: { type: 'number' },
-                  caseId: { type: 'number' },
-                  statusId: { type: 'number' },
-                  comment: { type: 'string' },
-                  version: { type: 'string' },
-                  elapsed: { type: 'string' },
-                  defects: { type: 'string' },
-                  assignedToId: { type: 'number' },
+                  testId: { type: 'number', description: 'Test ID' },
+                  caseId: { type: 'number', description: 'Case ID' },
+                  statusId: { type: 'number', description: 'Status ID' },
+                  comment: { type: 'string', description: 'Test result comment' },
+                  version: { type: 'string', description: 'Version tested' },
+                  elapsed: { type: 'string', description: 'Time elapsed' },
+                  defects: { type: 'string', description: 'Defects found' },
+                  assignedToId: { type: 'number', description: 'Assigned user ID' },
                   stepResults: {
                     type: 'array',
                     items: {
                       type: 'object',
                       properties: {
-                        content: { type: 'string' },
-                        expected: { type: 'string' },
-                        actual: { type: 'string' },
-                        statusId: { type: 'number' },
+                        content: { type: 'string', description: 'Step content' },
+                        expected: { type: 'string', description: 'Expected result' },
+                        actual: { type: 'string', description: 'Actual result' },
+                        statusId: { type: 'number', description: 'Status ID for this step' },
                       },
                     },
                   },
-                  customFields: { type: 'object' },
+                  customFields: { type: 'object', description: 'Custom field values' },
                 },
                 required: ['statusId'],
               },
@@ -855,6 +856,7 @@ class TestRailMCPServer {
             },
             template: {
               type: 'object',
+              description: 'Project template configuration',
               properties: {
                 createDefaultSuites: {
                   type: 'boolean',
@@ -878,11 +880,11 @@ class TestRailMCPServer {
                   items: {
                     type: 'object',
                     properties: {
-                      name: { type: 'string' },
-                      description: { type: 'string' },
+                      name: { type: 'string', description: 'Section name' },
+                      description: { type: 'string', description: 'Section description' },
                       subsections: {
                         type: 'array',
-                        items: { type: 'string' },
+                        items: { type: 'string', description: 'Subsection name' },
                       },
                     },
                   },
@@ -993,21 +995,22 @@ class TestRailMCPServer {
             },
             structure: {
               type: 'object',
+              description: 'Suite structure configuration',
               properties: {
                 sections: {
                   type: 'array',
                   items: {
                     type: 'object',
                     properties: {
-                      name: { type: 'string' },
-                      description: { type: 'string' },
+                      name: { type: 'string', description: 'Section name' },
+                      description: { type: 'string', description: 'Section description' },
                       subsections: {
                         type: 'array',
                         items: {
                           type: 'object',
                           properties: {
-                            name: { type: 'string' },
-                            description: { type: 'string' },
+                            name: { type: 'string', description: 'Subsection name' },
+                            description: { type: 'string', description: 'Subsection description' },
                           },
                         },
                       },
@@ -1024,11 +1027,11 @@ class TestRailMCPServer {
                   items: {
                     type: 'object',
                     properties: {
-                      title: { type: 'string' },
-                      type: { type: 'string' },
-                      priority: { type: 'string' },
-                      steps: { type: 'string' },
-                      expected: { type: 'string' },
+                      title: { type: 'string', description: 'Case title' },
+                      type: { type: 'string', description: 'Case type' },
+                      priority: { type: 'string', description: 'Case priority' },
+                      steps: { type: 'string', description: 'Test steps' },
+                      expected: { type: 'string', description: 'Expected result' },
                     },
                   },
                   description: 'Custom case templates',
@@ -1197,31 +1200,37 @@ class TestRailMCPServer {
             testSuite: {
               type: 'object',
               properties: {
-                suiteId: { type: 'string' },
-                name: { type: 'string' },
+                suiteId: { type: 'string', description: 'AutoSpectra suite ID' },
+                name: { type: 'string', description: 'Suite name' },
                 results: {
                   type: 'array',
+                  description: 'Array of test results',
                   items: {
                     type: 'object',
                     properties: {
-                      testId: { type: 'string' },
-                      title: { type: 'string' },
-                      status: { type: 'string', enum: ['passed', 'failed', 'skipped', 'blocked'] },
-                      duration: { type: 'number' },
-                      error: { type: 'string' },
-                      metadata: { type: 'object' },
+                      testId: { type: 'string', description: 'Test ID' },
+                      title: { type: 'string', description: 'Test title' },
+                      status: {
+                        type: 'string',
+                        enum: ['passed', 'failed', 'skipped', 'blocked'],
+                        description: 'Test status',
+                      },
+                      duration: { type: 'number', description: 'Test duration in seconds' },
+                      error: { type: 'string', description: 'Error message if test failed' },
+                      metadata: { type: 'object', description: 'Additional test metadata' },
                     },
                   },
                 },
                 summary: {
                   type: 'object',
+                  description: 'Test execution summary',
                   properties: {
-                    total: { type: 'number' },
-                    passed: { type: 'number' },
-                    failed: { type: 'number' },
-                    skipped: { type: 'number' },
-                    blocked: { type: 'number' },
-                    duration: { type: 'number' },
+                    total: { type: 'number', description: 'Total number of tests' },
+                    passed: { type: 'number', description: 'Number of passed tests' },
+                    failed: { type: 'number', description: 'Number of failed tests' },
+                    skipped: { type: 'number', description: 'Number of skipped tests' },
+                    blocked: { type: 'number', description: 'Number of blocked tests' },
+                    duration: { type: 'number', description: 'Total execution duration' },
                   },
                 },
               },
@@ -1230,10 +1239,13 @@ class TestRailMCPServer {
             options: {
               type: 'object',
               properties: {
-                createCasesIfMissing: { type: 'boolean' },
-                milestoneId: { type: 'number' },
-                environment: { type: 'string' },
-                buildNumber: { type: 'string' },
+                createCasesIfMissing: {
+                  type: 'boolean',
+                  description: "Create test cases if they don't exist",
+                },
+                milestoneId: { type: 'number', description: 'Milestone ID to associate with' },
+                environment: { type: 'string', description: 'Test environment' },
+                buildNumber: { type: 'string', description: 'Build number' },
               },
               description: 'Sync options',
             },
@@ -1556,6 +1568,7 @@ class TestRailMCPServer {
             includeResults: { type: 'boolean', description: 'Include test results' },
             dateRange: {
               type: 'object',
+              description: 'Date range filter for export',
               properties: {
                 start: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
                 end: { type: 'string', description: 'End date (YYYY-MM-DD)' },
@@ -1583,6 +1596,7 @@ class TestRailMCPServer {
             milestoneId: { type: 'number', description: 'Milestone ID (optional)' },
             dateRange: {
               type: 'object',
+              description: 'Date range filter for reports',
               properties: {
                 start: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
                 end: { type: 'string', description: 'End date (YYYY-MM-DD)' },
