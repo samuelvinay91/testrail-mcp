@@ -508,20 +508,20 @@ export const TestRailStatusIds = {
   CUSTOM_STATUS4: 9,
   CUSTOM_STATUS5: 10,
   CUSTOM_STATUS6: 11,
-  CUSTOM_STATUS7: 12
+  CUSTOM_STATUS7: 12,
 } as const;
 
-export type TestRailStatusId = typeof TestRailStatusIds[keyof typeof TestRailStatusIds];
+export type TestRailStatusId = (typeof TestRailStatusIds)[keyof typeof TestRailStatusIds];
 
 // Priority constants
 export const TestRailPriorityIds = {
   LOW: 1,
   MEDIUM: 2,
   HIGH: 3,
-  CRITICAL: 4
+  CRITICAL: 4,
 } as const;
 
-export type TestRailPriorityId = typeof TestRailPriorityIds[keyof typeof TestRailPriorityIds];
+export type TestRailPriorityId = (typeof TestRailPriorityIds)[keyof typeof TestRailPriorityIds];
 
 // Case type constants
 export const TestRailCaseTypeIds = {
@@ -536,16 +536,16 @@ export const TestRailCaseTypeIds = {
   REGRESSION: 9,
   SECURITY: 10,
   SMOKE_SANITY: 11,
-  USABILITY: 12
+  USABILITY: 12,
 } as const;
 
-export type TestRailCaseTypeId = typeof TestRailCaseTypeIds[keyof typeof TestRailCaseTypeIds];
+export type TestRailCaseTypeId = (typeof TestRailCaseTypeIds)[keyof typeof TestRailCaseTypeIds];
 
 // Suite mode constants
 export const TestRailSuiteModes = {
   SINGLE_SUITE: 1,
   SINGLE_SUITE_BASELINES: 2,
-  MULTIPLE_SUITES: 3
+  MULTIPLE_SUITES: 3,
 } as const;
 
-export type TestRailSuiteMode = typeof TestRailSuiteModes[keyof typeof TestRailSuiteModes];
+export type TestRailSuiteMode = (typeof TestRailSuiteModes)[keyof typeof TestRailSuiteModes];

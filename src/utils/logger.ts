@@ -6,7 +6,7 @@ export enum LogLevel {
   DEBUG = 0,
   INFO = 1,
   WARN = 2,
-  ERROR = 3
+  ERROR = 3,
 }
 
 export class Logger {
@@ -22,19 +22,28 @@ export class Logger {
 
   debug(message: string, data?: any): void {
     if (this.logLevel <= LogLevel.DEBUG) {
-      console.log(`🐛 [DEBUG] ${new Date().toISOString()} - ${message}`, data ? JSON.stringify(data, null, 2) : '');
+      console.log(
+        `🐛 [DEBUG] ${new Date().toISOString()} - ${message}`,
+        data ? JSON.stringify(data, null, 2) : ''
+      );
     }
   }
 
   info(message: string, data?: any): void {
     if (this.logLevel <= LogLevel.INFO) {
-      console.log(`ℹ️  [INFO] ${new Date().toISOString()} - ${message}`, data ? JSON.stringify(data, null, 2) : '');
+      console.log(
+        `ℹ️  [INFO] ${new Date().toISOString()} - ${message}`,
+        data ? JSON.stringify(data, null, 2) : ''
+      );
     }
   }
 
   warn(message: string, data?: any): void {
     if (this.logLevel <= LogLevel.WARN) {
-      console.warn(`⚠️  [WARN] ${new Date().toISOString()} - ${message}`, data ? JSON.stringify(data, null, 2) : '');
+      console.warn(
+        `⚠️  [WARN] ${new Date().toISOString()} - ${message}`,
+        data ? JSON.stringify(data, null, 2) : ''
+      );
     }
   }
 
@@ -47,8 +56,11 @@ export class Logger {
 
 // Default logger instance
 export const logger = new Logger(
-  process.env.LOG_LEVEL === 'debug' ? LogLevel.DEBUG :
-  process.env.LOG_LEVEL === 'warn' ? LogLevel.WARN :
-  process.env.LOG_LEVEL === 'error' ? LogLevel.ERROR :
-  LogLevel.INFO
+  process.env.LOG_LEVEL === 'debug'
+    ? LogLevel.DEBUG
+    : process.env.LOG_LEVEL === 'warn'
+      ? LogLevel.WARN
+      : process.env.LOG_LEVEL === 'error'
+        ? LogLevel.ERROR
+        : LogLevel.INFO
 );

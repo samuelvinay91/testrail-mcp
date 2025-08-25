@@ -3,7 +3,11 @@
  * Demonstrates how to integrate TestRail with AutoSpectra test execution
  */
 
-import { AutoSpectraBridge, AutoSpectraTestResult, AutoSpectraTestSuite } from './autospectra-bridge';
+import {
+  AutoSpectraBridge,
+  AutoSpectraTestResult,
+  AutoSpectraTestSuite,
+} from './autospectra-bridge';
 
 /**
  * Example 1: Basic Test Result Submission
@@ -16,7 +20,7 @@ export async function basicIntegrationExample() {
     baseUrl: 'https://yourcompany.testrail.io',
     username: 'automation@company.com',
     apiKey: 'your-api-key',
-    projectId: 1
+    projectId: 1,
   });
 
   if (!connected) {
@@ -36,8 +40,8 @@ export async function basicIntegrationExample() {
         environment: 'staging',
         buildNumber: 'v1.2.3-build.456',
         branch: 'main',
-        commit: 'abc123def'
-      }
+        commit: 'abc123def',
+      },
     },
     {
       testId: 'login-002',
@@ -51,9 +55,9 @@ export async function basicIntegrationExample() {
         framework: 'Playwright',
         browser: 'Chrome',
         environment: 'staging',
-        buildNumber: 'v1.2.3-build.456'
-      }
-    }
+        buildNumber: 'v1.2.3-build.456',
+      },
+    },
   ];
 
   const testSuite: AutoSpectraTestSuite = {
@@ -66,8 +70,8 @@ export async function basicIntegrationExample() {
       failed: 1,
       skipped: 0,
       blocked: 0,
-      duration: 4300
-    }
+      duration: 4300,
+    },
   };
 
   // Step 3: Auto-sync with TestRail
@@ -75,7 +79,7 @@ export async function basicIntegrationExample() {
     createCasesIfMissing: true,
     milestoneId: 15,
     environment: 'staging',
-    buildNumber: 'v1.2.3-build.456'
+    buildNumber: 'v1.2.3-build.456',
   });
 
   console.log('Integration Result:', syncResult);
@@ -99,7 +103,7 @@ export class CIPipelineIntegration {
       baseUrl: process.env.TESTRAIL_URL || '',
       username: process.env.TESTRAIL_USERNAME || '',
       apiKey: process.env.TESTRAIL_API_KEY || '',
-      projectId: this.projectId
+      projectId: this.projectId,
     };
 
     return await this.bridge.connect(config);
@@ -121,11 +125,13 @@ export class CIPipelineIntegration {
       const result = await this.bridge.autoSync(this.projectId, suite, {
         createCasesIfMissing: true,
         environment: buildInfo.environment,
-        buildNumber: buildInfo.buildNumber
+        buildNumber: buildInfo.buildNumber,
       });
 
       if (result.success) {
-        console.log(`✅ Suite ${suite.name}: Run ${result.runId} created with ${result.submittedResults} results`);
+        console.log(
+          `✅ Suite ${suite.name}: Run ${result.runId} created with ${result.submittedResults} results`
+        );
       } else {
         console.error(`❌ Suite ${suite.name} failed:`, result.errors);
       }
@@ -144,18 +150,18 @@ export class CIPipelineIntegration {
             title: 'Application loads successfully',
             status: 'passed',
             duration: 1500,
-            metadata: buildInfo
+            metadata: buildInfo,
           },
           {
             testId: 'smoke-002',
             title: 'API health check passes',
             status: 'passed',
             duration: 800,
-            metadata: buildInfo
-          }
+            metadata: buildInfo,
+          },
         ],
-        summary: { total: 2, passed: 2, failed: 0, skipped: 0, blocked: 0, duration: 2300 }
-      }
+        summary: { total: 2, passed: 2, failed: 0, skipped: 0, blocked: 0, duration: 2300 },
+      },
     ];
   }
 }
@@ -175,7 +181,7 @@ export class RealTimeMonitor {
       baseUrl: process.env.TESTRAIL_URL || '',
       username: process.env.TESTRAIL_USERNAME || '',
       apiKey: process.env.TESTRAIL_API_KEY || '',
-      projectId
+      projectId,
     });
 
     if (!connected) {
@@ -191,18 +197,18 @@ export class RealTimeMonitor {
     const testScenarios = [
       { id: 'e2e-001', title: 'Complete user journey', duration: 15000 },
       { id: 'api-001', title: 'API integration test', duration: 5000 },
-      { id: 'ui-001', title: 'UI component test', duration: 3000 }
+      { id: 'ui-001', title: 'UI component test', duration: 3000 },
     ];
 
     for (const scenario of testScenarios) {
       console.log(`🏃 Starting test: ${scenario.title}`);
-      
+
       // Simulate test execution time
-      await new Promise(resolve => setTimeout(resolve, Math.min(scenario.duration, 2000)));
-      
+      await new Promise((resolve) => setTimeout(resolve, Math.min(scenario.duration, 2000)));
+
       // Simulate random result
       const status = Math.random() > 0.2 ? 'passed' : 'failed';
-      
+
       const result: AutoSpectraTestResult = {
         testId: scenario.id,
         title: scenario.title,
@@ -212,14 +218,16 @@ export class RealTimeMonitor {
         metadata: {
           framework: 'AutoSpectra',
           environment: 'staging',
-          buildNumber: 'live-test'
-        }
+          buildNumber: 'live-test',
+        },
       };
 
       // Submit individual result
       await this.submitIndividualResult(projectId, result);
-      
-      console.log(`${status === 'passed' ? '✅' : '❌'} Test completed: ${scenario.title} (${status})`);
+
+      console.log(
+        `${status === 'passed' ? '✅' : '❌'} Test completed: ${scenario.title} (${status})`
+      );
     }
   }
 
@@ -237,13 +245,13 @@ export class RealTimeMonitor {
         failed: result.status === 'failed' ? 1 : 0,
         skipped: result.status === 'skipped' ? 1 : 0,
         blocked: result.status === 'blocked' ? 1 : 0,
-        duration: result.duration || 0
-      }
+        duration: result.duration || 0,
+      },
     };
 
     await this.bridge.autoSync(projectId, suite, {
       createCasesIfMissing: true,
-      environment: 'live-monitoring'
+      environment: 'live-monitoring',
     });
   }
 }
@@ -253,12 +261,12 @@ export class RealTimeMonitor {
  */
 export async function generateAdvancedDashboard(projectId: number): Promise<any> {
   const bridge = new AutoSpectraBridge();
-  
+
   const connected = await bridge.connect({
     baseUrl: process.env.TESTRAIL_URL || '',
     username: process.env.TESTRAIL_USERNAME || '',
     apiKey: process.env.TESTRAIL_API_KEY || '',
-    projectId
+    projectId,
   });
 
   if (!connected) {
@@ -271,7 +279,7 @@ export async function generateAdvancedDashboard(projectId: number): Promise<any>
 
   const dashboard = await bridge.generateDashboard(projectId, {
     start: thirtyDaysAgo.toISOString().split('T')[0],
-    end: new Date().toISOString().split('T')[0]
+    end: new Date().toISOString().split('T')[0],
   });
 
   return dashboard;
@@ -289,19 +297,25 @@ export class IntegrationUtils {
     return {
       suiteId: autoSpectraJson.suiteId || 'unknown',
       name: autoSpectraJson.name || 'AutoSpectra Test Suite',
-      results: autoSpectraJson.tests?.map((test: any) => ({
-        testId: test.id,
-        title: test.title,
-        status: test.status,
-        duration: test.duration,
-        error: test.error,
-        screenshots: test.attachments?.screenshots || [],
-        logs: test.attachments?.logs || [],
-        metadata: test.metadata
-      })) || [],
+      results:
+        autoSpectraJson.tests?.map((test: any) => ({
+          testId: test.id,
+          title: test.title,
+          status: test.status,
+          duration: test.duration,
+          error: test.error,
+          screenshots: test.attachments?.screenshots || [],
+          logs: test.attachments?.logs || [],
+          metadata: test.metadata,
+        })) || [],
       summary: autoSpectraJson.summary || {
-        total: 0, passed: 0, failed: 0, skipped: 0, blocked: 0, duration: 0
-      }
+        total: 0,
+        passed: 0,
+        failed: 0,
+        skipped: 0,
+        blocked: 0,
+        duration: 0,
+      },
     };
   }
 
@@ -336,16 +350,16 @@ export const DEFAULT_CONFIG = {
   testrail: {
     baseUrl: process.env.TESTRAIL_URL || '',
     username: process.env.TESTRAIL_USERNAME || '',
-    apiKey: process.env.TESTRAIL_API_KEY || ''
+    apiKey: process.env.TESTRAIL_API_KEY || '',
   },
   autospectra: {
     outputPath: process.env.AUTOSPECTRA_OUTPUT_PATH || './test-results',
-    environment: process.env.TEST_ENVIRONMENT || 'development'
+    environment: process.env.TEST_ENVIRONMENT || 'development',
   },
   integration: {
     autoCreateCases: true,
     autoClosureRuns: true,
     enableDashboard: true,
-    retryFailedUploads: 3
-  }
+    retryFailedUploads: 3,
+  },
 };

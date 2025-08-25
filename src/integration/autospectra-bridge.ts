@@ -59,7 +59,7 @@ export class AutoSpectraBridge {
       await this.testRailTools.connectTestRail({
         baseUrl: config.baseUrl,
         username: config.username,
-        apiKey: config.apiKey
+        apiKey: config.apiKey,
       });
 
       this.isConnected = true;
@@ -97,7 +97,7 @@ export class AutoSpectraBridge {
         description,
         ...(options?.milestoneId && { milestoneId: options.milestoneId }),
         ...(options?.assignedToId && { assignedToId: options.assignedToId }),
-        includeAll: true // Include all cases for now
+        includeAll: true, // Include all cases for now
       });
 
       if (result.content && result.content[0]) {
@@ -137,16 +137,17 @@ export class AutoSpectraBridge {
 
     try {
       const results = suite.results
-        .filter(result => caseMapping.has(result.testId))
-        .map(result => ({
+        .filter((result) => caseMapping.has(result.testId))
+        .map((result) => ({
           caseId: caseMapping.get(result.testId)!,
           statusId: this.mapAutoSpectraStatus(result.status),
           comment: this.buildResultComment(result),
           elapsed: result.duration ? this.formatDuration(result.duration) : undefined,
           version: result.metadata?.buildNumber,
-          defects: result.status === 'failed' && options?.addDefects 
-            ? `AUTO-${result.testId}-${Date.now()}` 
-            : undefined
+          defects:
+            result.status === 'failed' && options?.addDefects
+              ? `AUTO-${result.testId}-${Date.now()}`
+              : undefined,
         }));
 
       if (results.length === 0) {
@@ -155,14 +156,14 @@ export class AutoSpectraBridge {
 
       await this.testRailTools.addBulkResults({
         runId,
-        results: results.map(result => ({
+        results: results.map((result) => ({
           caseId: result.caseId,
           statusId: result.statusId,
           comment: result.comment,
           ...(result.elapsed && { elapsed: result.elapsed }),
           ...(result.version && { version: result.version }),
-          ...(result.defects && { defects: result.defects })
-        }))
+          ...(result.defects && { defects: result.defects }),
+        })),
       });
 
       // Close run if requested
@@ -205,13 +206,13 @@ export class AutoSpectraBridge {
       success: false,
       createdCases: 0,
       submittedResults: 0,
-      errors: [] as string[]
+      errors: [] as string[],
     };
 
     try {
       // Step 1: Get or create TestRail cases
       const caseMapping = new Map<string, number>();
-      
+
       if (options?.createCasesIfMissing) {
         // Auto-create missing test cases
         for (const testResult of suite.results) {
@@ -227,7 +228,7 @@ export class AutoSpectraBridge {
       const runId = await this.createRunFromSuite(projectId, suite, {
         ...(options?.milestoneId && { milestoneId: options.milestoneId }),
         ...(options?.environment && { environment: options.environment }),
-        ...(options?.buildNumber && { buildNumber: options.buildNumber })
+        ...(options?.buildNumber && { buildNumber: options.buildNumber }),
       });
 
       if (!runId) {
@@ -240,7 +241,7 @@ export class AutoSpectraBridge {
       // Step 3: Submit results
       const submitSuccess = await this.submitResults(suite, caseMapping, {
         closeRun: true,
-        addDefects: true
+        addDefects: true,
       });
 
       if (submitSuccess) {
@@ -274,7 +275,7 @@ export class AutoSpectraBridge {
         timeRange,
         includeMetrics: true,
         includeTrends: true,
-        includeTopFailures: true
+        includeTopFailures: true,
       });
 
       if (result.content && result.content[0]) {
@@ -292,10 +293,7 @@ export class AutoSpectraBridge {
 
   // Helper methods
 
-  private buildRunDescription(
-    suite: AutoSpectraTestSuite,
-    options?: any
-  ): string {
+  private buildRunDescription(suite: AutoSpectraTestSuite, options?: any): string {
     let description = `AutoSpectra Test Execution - ${suite.name}\n\n`;
     description += `Summary:\n`;
     description += `- Total Tests: ${suite.summary.total}\n`;
@@ -318,21 +316,26 @@ export class AutoSpectraBridge {
 
   private mapAutoSpectraStatus(status: string): number {
     switch (status.toLowerCase()) {
-      case 'passed': return 1;
-      case 'failed': return 5;
-      case 'skipped': return 2;
-      case 'blocked': return 2;
-      default: return 3; // Untested
+      case 'passed':
+        return 1;
+      case 'failed':
+        return 5;
+      case 'skipped':
+        return 2;
+      case 'blocked':
+        return 2;
+      default:
+        return 3; // Untested
     }
   }
 
   private buildResultComment(result: AutoSpectraTestResult): string {
     let comment = `AutoSpectra Test Result: ${result.status.toUpperCase()}\n\n`;
-    
+
     if (result.error) {
       comment += `Error: ${result.error}\n\n`;
     }
-    
+
     if (result.metadata) {
       comment += `Execution Details:\n`;
       if (result.metadata.framework) comment += `- Framework: ${result.metadata.framework}\n`;
@@ -342,15 +345,15 @@ export class AutoSpectraBridge {
       if (result.metadata.branch) comment += `- Branch: ${result.metadata.branch}\n`;
       if (result.metadata.commit) comment += `- Commit: ${result.metadata.commit}\n`;
     }
-    
+
     if (result.screenshots && result.screenshots.length > 0) {
       comment += `\nScreenshots: ${result.screenshots.length} captured`;
     }
-    
+
     if (result.logs && result.logs.length > 0) {
       comment += `\nLogs: ${result.logs.length} files available`;
     }
-    
+
     return comment;
   }
 
@@ -370,14 +373,14 @@ export class AutoSpectraBridge {
       // First, try to find existing case by title
       const existingCases = await this.testRailTools.getCases({
         projectId,
-        limit: 1000
+        limit: 1000,
       });
 
       if (existingCases.content && existingCases.content[0]) {
         const response = JSON.parse(existingCases.content[0].text as string);
         if (response.success && response.data.cases) {
-          const existingCase = response.data.cases.find((c: any) => 
-            c.title.toLowerCase() === testResult.title.toLowerCase()
+          const existingCase = response.data.cases.find(
+            (c: any) => c.title.toLowerCase() === testResult.title.toLowerCase()
           );
           if (existingCase) {
             return existingCase.id;
@@ -396,8 +399,8 @@ export class AutoSpectraBridge {
         expectedResult: 'Test should pass without errors',
         customFields: {
           custom_automation_type: 'Automated',
-          custom_test_framework: testResult.metadata?.framework || 'AutoSpectra'
-        }
+          custom_test_framework: testResult.metadata?.framework || 'AutoSpectra',
+        },
       });
 
       if (createResult.content && createResult.content[0]) {

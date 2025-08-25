@@ -56,7 +56,7 @@ import {
   DeleteAttachmentInput,
   CreateUserInput,
   UpdateUserInput,
-  TestRailErrorCodes
+  TestRailErrorCodes,
 } from '../types';
 
 /**
@@ -74,14 +74,20 @@ export class TestRailMCPTools {
    */
   private createSuccessResponse(data: any, message?: string): TestRailMCPResponse {
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          success: true,
-          data,
-          message: message || 'Operation completed successfully'
-        }, null, 2)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(
+            {
+              success: true,
+              data,
+              message: message || 'Operation completed successfully',
+            },
+            null,
+            2
+          ),
+        },
+      ],
     };
   }
 
@@ -90,17 +96,23 @@ export class TestRailMCPTools {
    */
   private createErrorResponse(error: string, code?: string, details?: any): TestRailMCPResponse {
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          success: false,
-          error,
-          code: code || TestRailErrorCodes.INTERNAL_ERROR,
-          details,
-          timestamp: new Date().toISOString()
-        }, null, 2)
-      }],
-      isError: true
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(
+            {
+              success: false,
+              error,
+              code: code || TestRailErrorCodes.INTERNAL_ERROR,
+              details,
+              timestamp: new Date().toISOString(),
+            },
+            null,
+            2
+          ),
+        },
+      ],
+      isError: true,
     };
   }
 
@@ -109,7 +121,9 @@ export class TestRailMCPTools {
    */
   private validateConnection(): void {
     if (!this.testRailService) {
-      throw new Error('TestRail service not connected. Please connect first using connect_testrail tool.');
+      throw new Error(
+        'TestRail service not connected. Please connect first using connect_testrail tool.'
+      );
     }
   }
 
@@ -126,7 +140,7 @@ export class TestRailMCPTools {
         baseUrl: input.baseUrl,
         username: input.username,
         apiKey: input.apiKey,
-        ...(input.timeout && { timeout: input.timeout })
+        ...(input.timeout && { timeout: input.timeout }),
       });
 
       // Initialize advanced managers
@@ -135,7 +149,7 @@ export class TestRailMCPTools {
       this.autoSpectraBridge = new AutoSpectraBridge();
 
       const connectionTest = await this.testRailService.testConnection();
-      
+
       if (connectionTest.connected) {
         return this.createSuccessResponse(connectionTest, 'Successfully connected to TestRail');
       } else {
@@ -180,12 +194,12 @@ export class TestRailMCPTools {
     try {
       this.validateConnection();
       const projects = await this.testRailService!.getProjects({
-        is_completed: input.isCompleted ? 1 : 0
+        is_completed: input.isCompleted ? 1 : 0,
       });
-      
+
       return this.createSuccessResponse({
         projects,
-        total: projects.length
+        total: projects.length,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -221,7 +235,7 @@ export class TestRailMCPTools {
         name: input.name,
         ...(input.announcement && { announcement: input.announcement }),
         ...(input.showAnnouncement !== undefined && { show_announcement: input.showAnnouncement }),
-        ...(input.suiteMode && { suite_mode: input.suiteMode })
+        ...(input.suiteMode && { suite_mode: input.suiteMode }),
       });
       return this.createSuccessResponse({ project }, 'Project created successfully');
     } catch (error) {
@@ -246,7 +260,7 @@ export class TestRailMCPTools {
       return this.createSuccessResponse({
         suites,
         total: suites.length,
-        projectId: input.projectId
+        projectId: input.projectId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -264,7 +278,7 @@ export class TestRailMCPTools {
       this.validateConnection();
       const suite = await this.testRailService!.addSuite(input.projectId, {
         name: input.name,
-        ...(input.description && { description: input.description })
+        ...(input.description && { description: input.description }),
       });
       return this.createSuccessResponse({ suite }, 'Suite created successfully');
     } catch (error) {
@@ -290,7 +304,7 @@ export class TestRailMCPTools {
         sections,
         total: sections.length,
         projectId: input.projectId,
-        suiteId: input.suiteId
+        suiteId: input.suiteId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -310,7 +324,7 @@ export class TestRailMCPTools {
         name: input.name,
         ...(input.description && { description: input.description }),
         ...(input.suiteId && { suite_id: input.suiteId }),
-        ...(input.parentId && { parent_id: input.parentId })
+        ...(input.parentId && { parent_id: input.parentId }),
       });
       return this.createSuccessResponse({ section }, 'Section created successfully');
     } catch (error) {
@@ -331,22 +345,18 @@ export class TestRailMCPTools {
   async getCases(input: GetCasesInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      const cases = await this.testRailService!.getCases(
-        input.projectId,
-        input.suiteId,
-        {
-          ...(input.limit && { limit: input.limit }),
-          ...(input.offset && { offset: input.offset }),
-          ...(input.filter && { filter: input.filter })
-        }
-      );
-      
+      const cases = await this.testRailService!.getCases(input.projectId, input.suiteId, {
+        ...(input.limit && { limit: input.limit }),
+        ...(input.offset && { offset: input.offset }),
+        ...(input.filter && { filter: input.filter }),
+      });
+
       return this.createSuccessResponse({
         cases,
         total: cases.length,
         projectId: input.projectId,
         suiteId: input.suiteId,
-        sectionId: input.sectionId
+        sectionId: input.sectionId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -362,7 +372,7 @@ export class TestRailMCPTools {
   async createCase(input: CreateCaseInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       const caseData: any = {
         title: input.title,
         template_id: input.templateId,
@@ -375,7 +385,7 @@ export class TestRailMCPTools {
         custom_steps: input.steps,
         custom_expected: input.expectedResult,
         custom_steps_separated: input.stepsDetailed,
-        ...input.customFields
+        ...input.customFields,
       };
 
       const testCase = await this.testRailService!.addCase(input.sectionId, caseData);
@@ -394,7 +404,7 @@ export class TestRailMCPTools {
   async updateCase(input: UpdateCaseInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       const updateData: any = {};
       if (input.title) updateData.title = input.title;
       if (input.templateId) updateData.template_id = input.templateId;
@@ -426,10 +436,7 @@ export class TestRailMCPTools {
     try {
       this.validateConnection();
       await this.testRailService!.deleteCase(input.caseId);
-      return this.createSuccessResponse(
-        { caseId: input.caseId },
-        'Test case deleted successfully'
-      );
+      return this.createSuccessResponse({ caseId: input.caseId }, 'Test case deleted successfully');
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to delete test case',
@@ -453,14 +460,14 @@ export class TestRailMCPTools {
         ...(input.offset && { offset: input.offset }),
         filter: {
           is_completed: input.isCompleted ? 1 : 0,
-          ...(input.milestoneId && { milestone_id: [input.milestoneId] })
-        }
+          ...(input.milestoneId && { milestone_id: [input.milestoneId] }),
+        },
       });
-      
+
       return this.createSuccessResponse({
         runs,
         total: runs.length,
-        projectId: input.projectId
+        projectId: input.projectId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -483,9 +490,9 @@ export class TestRailMCPTools {
         ...(input.assignedToId && { assignedto_id: input.assignedToId }),
         ...(input.includeAll !== undefined && { include_all: input.includeAll }),
         ...(input.caseIds && { case_ids: input.caseIds }),
-        ...(input.configIds && { config_ids: input.configIds })
+        ...(input.configIds && { config_ids: input.configIds }),
       });
-      
+
       return this.createSuccessResponse({ run }, 'Test run created successfully');
     } catch (error) {
       return this.createErrorResponse(
@@ -540,10 +547,7 @@ export class TestRailMCPTools {
     try {
       this.validateConnection();
       await this.testRailService!.deleteRun(input.runId);
-      return this.createSuccessResponse(
-        { runId: input.runId },
-        'Test run deleted successfully'
-      );
+      return this.createSuccessResponse({ runId: input.runId }, 'Test run deleted successfully');
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to delete test run',
@@ -565,13 +569,13 @@ export class TestRailMCPTools {
       const tests = await this.testRailService!.getTests(input.runId, {
         ...(input.limit && { limit: input.limit }),
         ...(input.offset && { offset: input.offset }),
-        ...(input.statusId && { filter: { status_id: [input.statusId] } })
+        ...(input.statusId && { filter: { status_id: [input.statusId] } }),
       });
-      
+
       return this.createSuccessResponse({
         tests,
         total: tests.length,
-        runId: input.runId
+        runId: input.runId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -587,7 +591,7 @@ export class TestRailMCPTools {
   async addResult(input: AddResultInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       const resultData: any = {
         status_id: input.statusId,
         comment: input.comment,
@@ -596,14 +600,18 @@ export class TestRailMCPTools {
         defects: input.defects,
         assignedto_id: input.assignedToId,
         custom_step_results: input.stepResults,
-        ...input.customFields
+        ...input.customFields,
       };
 
       let result;
       if (input.testId) {
         result = await this.testRailService!.addResult(input.testId, resultData);
       } else if (input.runId && input.caseId) {
-        result = await this.testRailService!.addResultForCase(input.runId, input.caseId, resultData);
+        result = await this.testRailService!.addResultForCase(
+          input.runId,
+          input.caseId,
+          resultData
+        );
       } else {
         throw new Error('Either testId or both runId and caseId must be provided');
       }
@@ -623,9 +631,9 @@ export class TestRailMCPTools {
   async addBulkResults(input: AddBulkResultsInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       // Convert input format to TestRail API format
-      const results = input.results.map(result => {
+      const results = input.results.map((result) => {
         const resultData: any = {
           status_id: result.statusId,
           comment: result.comment,
@@ -634,7 +642,7 @@ export class TestRailMCPTools {
           defects: result.defects,
           assignedto_id: result.assignedToId,
           custom_step_results: result.stepResults,
-          ...result.customFields
+          ...result.customFields,
         };
 
         if (result.testId) {
@@ -647,8 +655,8 @@ export class TestRailMCPTools {
       });
 
       // Determine if we're adding by test IDs or case IDs
-      const hasTestIds = results.some(r => r.test_id);
-      const hasCaseIds = results.some(r => r.case_id);
+      const hasTestIds = results.some((r) => r.test_id);
+      const hasCaseIds = results.some((r) => r.case_id);
 
       let apiResults;
       if (hasTestIds && !hasCaseIds) {
@@ -659,11 +667,14 @@ export class TestRailMCPTools {
         throw new Error('All results must use either test_id or case_id consistently');
       }
 
-      return this.createSuccessResponse({
-        results: apiResults,
-        processed: results.length,
-        runId: input.runId
-      }, 'Bulk test results added successfully');
+      return this.createSuccessResponse(
+        {
+          results: apiResults,
+          processed: results.length,
+          runId: input.runId,
+        },
+        'Bulk test results added successfully'
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to add bulk test results',
@@ -682,17 +693,17 @@ export class TestRailMCPTools {
   async getResults(input: GetResultsInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       let results;
       if (input.testId) {
         results = await this.testRailService!.getResults(input.testId, {
           ...(input.limit && { limit: input.limit }),
-          ...(input.offset && { offset: input.offset })
+          ...(input.offset && { offset: input.offset }),
         });
       } else if (input.runId && input.caseId) {
         results = await this.testRailService!.getResultsForCase(input.runId, input.caseId, {
           ...(input.limit && { limit: input.limit }),
-          ...(input.offset && { offset: input.offset })
+          ...(input.offset && { offset: input.offset }),
         });
       } else {
         throw new Error('Either testId or both runId and caseId must be provided');
@@ -703,7 +714,7 @@ export class TestRailMCPTools {
         total: results.length,
         testId: input.testId,
         runId: input.runId,
-        caseId: input.caseId
+        caseId: input.caseId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -727,7 +738,7 @@ export class TestRailMCPTools {
       return this.createSuccessResponse({
         users,
         total: users.length,
-        projectId: input.projectId
+        projectId: input.projectId,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -746,7 +757,7 @@ export class TestRailMCPTools {
       const statuses = await this.testRailService!.getStatuses();
       return this.createSuccessResponse({
         statuses,
-        total: statuses.length
+        total: statuses.length,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -765,7 +776,7 @@ export class TestRailMCPTools {
       const priorities = await this.testRailService!.getPriorities();
       return this.createSuccessResponse({
         priorities,
-        total: priorities.length
+        total: priorities.length,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -784,7 +795,7 @@ export class TestRailMCPTools {
       const types = await this.testRailService!.getCaseTypes();
       return this.createSuccessResponse({
         types,
-        total: types.length
+        total: types.length,
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -804,69 +815,86 @@ export class TestRailMCPTools {
   async search(input: SearchInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       const results: any = {
         query: input.query,
         entityType: input.entityType,
         total: 0,
-        items: []
+        items: [],
       };
 
       // Search based on entity type
       switch (input.entityType) {
         case 'cases':
           const cases = await this.testRailService!.getCases(input.projectId);
-          results.items = cases.filter(c => 
-            c.title.toLowerCase().includes(input.query.toLowerCase()) ||
-            (c.custom_steps && c.custom_steps.toLowerCase().includes(input.query.toLowerCase()))
-          ).slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
+          results.items = cases
+            .filter(
+              (c) =>
+                c.title.toLowerCase().includes(input.query.toLowerCase()) ||
+                (c.custom_steps && c.custom_steps.toLowerCase().includes(input.query.toLowerCase()))
+            )
+            .slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
           break;
-          
+
         case 'runs':
           const runs = await this.testRailService!.getRuns(input.projectId);
-          results.items = runs.filter(r => 
-            r.name.toLowerCase().includes(input.query.toLowerCase()) ||
-            (r.description && r.description.toLowerCase().includes(input.query.toLowerCase()))
-          ).slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
+          results.items = runs
+            .filter(
+              (r) =>
+                r.name.toLowerCase().includes(input.query.toLowerCase()) ||
+                (r.description && r.description.toLowerCase().includes(input.query.toLowerCase()))
+            )
+            .slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
           break;
-          
+
         case 'plans':
           const plans = await this.testRailService!.getPlans(input.projectId);
-          results.items = plans.filter(p => 
-            p.name.toLowerCase().includes(input.query.toLowerCase()) ||
-            (p.description && p.description.toLowerCase().includes(input.query.toLowerCase()))
-          ).slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
+          results.items = plans
+            .filter(
+              (p) =>
+                p.name.toLowerCase().includes(input.query.toLowerCase()) ||
+                (p.description && p.description.toLowerCase().includes(input.query.toLowerCase()))
+            )
+            .slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
           break;
-          
+
         case 'milestones':
           const milestones = await this.testRailService!.getMilestones(input.projectId);
-          results.items = milestones.filter(m => 
-            m.name.toLowerCase().includes(input.query.toLowerCase()) ||
-            (m.description && m.description.toLowerCase().includes(input.query.toLowerCase()))
-          ).slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
+          results.items = milestones
+            .filter(
+              (m) =>
+                m.name.toLowerCase().includes(input.query.toLowerCase()) ||
+                (m.description && m.description.toLowerCase().includes(input.query.toLowerCase()))
+            )
+            .slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
           break;
-          
+
         default:
           // Search across all entity types
           const allCases = await this.testRailService!.getCases(input.projectId);
           const allRuns = await this.testRailService!.getRuns(input.projectId);
-          
-          const matchingCases = allCases.filter(c => 
-            c.title.toLowerCase().includes(input.query.toLowerCase())
-          ).map(c => ({ ...c, entity_type: 'case' }));
-          
-          const matchingRuns = allRuns.filter(r => 
-            r.name.toLowerCase().includes(input.query.toLowerCase())
-          ).map(r => ({ ...r, entity_type: 'run' }));
-          
-          results.items = [...matchingCases, ...matchingRuns]
-            .slice(input.offset || 0, (input.offset || 0) + (input.limit || 50));
+
+          const matchingCases = allCases
+            .filter((c) => c.title.toLowerCase().includes(input.query.toLowerCase()))
+            .map((c) => ({ ...c, entity_type: 'case' }));
+
+          const matchingRuns = allRuns
+            .filter((r) => r.name.toLowerCase().includes(input.query.toLowerCase()))
+            .map((r) => ({ ...r, entity_type: 'run' }));
+
+          results.items = [...matchingCases, ...matchingRuns].slice(
+            input.offset || 0,
+            (input.offset || 0) + (input.limit || 50)
+          );
           break;
       }
-      
+
       results.total = results.items.length;
-      
-      return this.createSuccessResponse(results, `Found ${results.total} items matching "${input.query}"`);
+
+      return this.createSuccessResponse(
+        results,
+        `Found ${results.total} items matching "${input.query}"`
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Search failed',
@@ -881,14 +909,14 @@ export class TestRailMCPTools {
   async generateReport(input: GetReportInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       // Gather data for the report
       const projectData = await this.testRailService!.getProject(input.projectId);
-      
+
       let reportData: any = {
         project: projectData,
         generatedAt: new Date().toISOString(),
-        format: input.format || 'summary'
+        format: input.format || 'summary',
       };
 
       if (input.runId) {
@@ -898,10 +926,10 @@ export class TestRailMCPTools {
         reportData.tests = tests;
         reportData.summary = {
           total: tests.length,
-          passed: tests.filter(t => t.status_id === 1).length,
-          failed: tests.filter(t => t.status_id === 5).length,
-          blocked: tests.filter(t => t.status_id === 2).length,
-          untested: tests.filter(t => t.status_id === 3).length
+          passed: tests.filter((t) => t.status_id === 1).length,
+          failed: tests.filter((t) => t.status_id === 5).length,
+          blocked: tests.filter((t) => t.status_id === 2).length,
+          untested: tests.filter((t) => t.status_id === 3).length,
         };
       }
 
@@ -1096,8 +1124,10 @@ export class TestRailMCPTools {
         input.options
       );
 
-      return this.createSuccessResponse(result, 
-        `AutoSpectra sync completed: ${result.success ? 'SUCCESS' : 'FAILED'}`);
+      return this.createSuccessResponse(
+        result,
+        `AutoSpectra sync completed: ${result.success ? 'SUCCESS' : 'FAILED'}`
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to sync AutoSpectra results',
@@ -1124,14 +1154,14 @@ export class TestRailMCPTools {
         ...(input.includeAll !== undefined && { include_all: input.includeAll }),
         ...(input.caseIds && { case_ids: input.caseIds }),
         ...(input.configIds && { config_ids: input.configIds }),
-        ...(input.runs && { 
-          runs: input.runs.map(run => ({
+        ...(input.runs && {
+          runs: input.runs.map((run) => ({
             ...(run.includeAll !== undefined && { include_all: run.includeAll }),
             ...(run.caseIds && { case_ids: run.caseIds }),
             ...(run.configIds && { config_ids: run.configIds }),
-            ...(run.assignedToId && { assignedto_id: run.assignedToId })
-          }))
-        })
+            ...(run.assignedToId && { assignedto_id: run.assignedToId }),
+          })),
+        }),
       });
       return this.createSuccessResponse({ entry }, 'Plan entry added successfully');
     } catch (error) {
@@ -1153,7 +1183,7 @@ export class TestRailMCPTools {
         ...(input.description && { description: input.description }),
         ...(input.assignedToId && { assignedto_id: input.assignedToId }),
         ...(input.includeAll !== undefined && { include_all: input.includeAll }),
-        ...(input.caseIds && { case_ids: input.caseIds })
+        ...(input.caseIds && { case_ids: input.caseIds }),
       });
       return this.createSuccessResponse({ entry }, 'Plan entry updated successfully');
     } catch (error) {
@@ -1259,7 +1289,7 @@ export class TestRailMCPTools {
         ...(input.description && { description: input.description }),
         ...(input.dueOn && { due_on: new Date(input.dueOn).getTime() / 1000 }),
         ...(input.parentId && { parent_id: input.parentId }),
-        ...(input.refs && { refs: input.refs })
+        ...(input.refs && { refs: input.refs }),
       });
       return this.createSuccessResponse({ milestone }, 'Milestone created successfully');
     } catch (error) {
@@ -1282,7 +1312,7 @@ export class TestRailMCPTools {
         ...(input.dueOn && { due_on: new Date(input.dueOn).getTime() / 1000 }),
         ...(input.isCompleted !== undefined && { is_completed: input.isCompleted }),
         ...(input.isStarted !== undefined && { is_started: input.isStarted }),
-        ...(input.refs && { refs: input.refs })
+        ...(input.refs && { refs: input.refs }),
       });
       return this.createSuccessResponse({ milestone }, 'Milestone updated successfully');
     } catch (error) {
@@ -1318,10 +1348,10 @@ export class TestRailMCPTools {
       // Note: TestRail API may not have direct dependency support
       // This is a placeholder for future enhancement
       await this.testRailService!.getMilestone(input.milestoneId); // Validate milestone exists
-      return this.createSuccessResponse({ 
+      return this.createSuccessResponse({
         milestone_id: input.milestoneId,
         dependencies: [], // Placeholder
-        note: 'Milestone dependencies feature requires custom implementation'
+        note: 'Milestone dependencies feature requires custom implementation',
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -1334,16 +1364,21 @@ export class TestRailMCPTools {
   /**
    * Update milestone dependencies
    */
-  async updateMilestoneDependencies(input: UpdateMilestoneDependenciesInput): Promise<CallToolResult> {
+  async updateMilestoneDependencies(
+    input: UpdateMilestoneDependenciesInput
+  ): Promise<CallToolResult> {
     try {
       this.validateConnection();
       // Note: TestRail API may not have direct dependency support
       // This is a placeholder for future enhancement
-      return this.createSuccessResponse({
-        milestone_id: input.milestoneId,
-        dependencies: input.dependencies,
-        note: 'Milestone dependencies feature requires custom implementation'
-      }, 'Dependencies updated (placeholder)');
+      return this.createSuccessResponse(
+        {
+          milestone_id: input.milestoneId,
+          dependencies: input.dependencies,
+          note: 'Milestone dependencies feature requires custom implementation',
+        },
+        'Dependencies updated (placeholder)'
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to update milestone dependencies',
@@ -1419,7 +1454,7 @@ export class TestRailMCPTools {
         ...(input.announcement && { announcement: input.announcement }),
         ...(input.showAnnouncement !== undefined && { show_announcement: input.showAnnouncement }),
         ...(input.suiteMode && { suite_mode: input.suiteMode }),
-        ...(input.isCompleted !== undefined && { is_completed: input.isCompleted })
+        ...(input.isCompleted !== undefined && { is_completed: input.isCompleted }),
       });
       return this.createSuccessResponse({ project }, 'Project updated successfully');
     } catch (error) {
@@ -1458,7 +1493,7 @@ export class TestRailMCPTools {
         project_id: input.projectId,
         user_id: input.userId,
         permissions: {},
-        note: 'Project permissions feature requires custom implementation'
+        note: 'Project permissions feature requires custom implementation',
       });
     } catch (error) {
       return this.createErrorResponse(
@@ -1476,12 +1511,15 @@ export class TestRailMCPTools {
       this.validateConnection();
       // Note: TestRail API may not have direct permissions endpoint
       // This is a placeholder for future enhancement
-      return this.createSuccessResponse({
-        project_id: input.projectId,
-        user_id: input.userId,
-        permissions: input.permissions,
-        note: 'Project permissions feature requires custom implementation'
-      }, 'Permissions updated (placeholder)');
+      return this.createSuccessResponse(
+        {
+          project_id: input.projectId,
+          user_id: input.userId,
+          permissions: input.permissions,
+          note: 'Project permissions feature requires custom implementation',
+        },
+        'Permissions updated (placeholder)'
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to update project permissions',
@@ -1501,25 +1539,35 @@ export class TestRailMCPTools {
     try {
       this.validateConnection();
       const cases = await this.testRailService!.getCases(input.projectId, input.suiteId);
-      
+
       // Apply filters if provided
       let filteredCases = cases;
       if (input.filter) {
-        filteredCases = cases.filter(c => {
-          if (input.filter!.priority_id && !input.filter!.priority_id.includes(c.priority_id)) return false;
+        filteredCases = cases.filter((c) => {
+          if (input.filter!.priority_id && !input.filter!.priority_id.includes(c.priority_id))
+            return false;
           if (input.filter!.type_id && !input.filter!.type_id.includes(c.type_id)) return false;
-          if (input.filter!.created_by && !input.filter!.created_by.includes(c.created_by)) return false;
-          if (input.filter!.milestone_id && c.milestone_id && !input.filter!.milestone_id.includes(c.milestone_id)) return false;
+          if (input.filter!.created_by && !input.filter!.created_by.includes(c.created_by))
+            return false;
+          if (
+            input.filter!.milestone_id &&
+            c.milestone_id &&
+            !input.filter!.milestone_id.includes(c.milestone_id)
+          )
+            return false;
           return true;
         });
       }
-      
-      return this.createSuccessResponse({
-        format: input.format,
-        total_cases: filteredCases.length,
-        cases: filteredCases,
-        exported_at: new Date().toISOString()
-      }, `Cases exported in ${input.format} format`);
+
+      return this.createSuccessResponse(
+        {
+          format: input.format,
+          total_cases: filteredCases.length,
+          cases: filteredCases,
+          exported_at: new Date().toISOString(),
+        },
+        `Cases exported in ${input.format} format`
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to export cases',
@@ -1534,7 +1582,7 @@ export class TestRailMCPTools {
   async exportRuns(input: ExportRunsInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       let runs;
       if (input.runId) {
         const run = await this.testRailService!.getRun(input.runId);
@@ -1545,24 +1593,25 @@ export class TestRailMCPTools {
         }
       } else {
         runs = await this.testRailService!.getRuns(input.projectId);
-        
+
         // Apply date range filter if provided
         if (input.dateRange) {
           const startTime = new Date(input.dateRange.start).getTime() / 1000;
           const endTime = new Date(input.dateRange.end).getTime() / 1000;
-          runs = runs.filter(run => 
-            run.created_on >= startTime && run.created_on <= endTime
-          );
+          runs = runs.filter((run) => run.created_on >= startTime && run.created_on <= endTime);
         }
       }
-      
-      return this.createSuccessResponse({
-        format: input.format,
-        total_runs: runs.length,
-        runs,
-        include_results: input.includeResults || false,
-        exported_at: new Date().toISOString()
-      }, `Runs exported in ${input.format} format`);
+
+      return this.createSuccessResponse(
+        {
+          format: input.format,
+          total_runs: runs.length,
+          runs,
+          include_results: input.includeResults || false,
+          exported_at: new Date().toISOString(),
+        },
+        `Runs exported in ${input.format} format`
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to export runs',
@@ -1577,25 +1626,34 @@ export class TestRailMCPTools {
   async getReports(input: GetReportsInput): Promise<CallToolResult> {
     try {
       this.validateConnection();
-      
+
       let reportData: any = {
         project_id: input.projectId,
         type: input.type,
-        generated_at: new Date().toISOString()
+        generated_at: new Date().toISOString(),
       };
-      
+
       switch (input.type) {
         case 'summary':
           const runs = await this.testRailService!.getRuns(input.projectId);
           reportData.summary = {
             total_runs: runs.length,
-            completed_runs: runs.filter(r => r.is_completed).length,
-            total_tests: runs.reduce((sum, r) => sum + (r.passed_count + r.failed_count + r.blocked_count + r.untested_count + r.retest_count), 0),
+            completed_runs: runs.filter((r) => r.is_completed).length,
+            total_tests: runs.reduce(
+              (sum, r) =>
+                sum +
+                (r.passed_count +
+                  r.failed_count +
+                  r.blocked_count +
+                  r.untested_count +
+                  r.retest_count),
+              0
+            ),
             passed_tests: runs.reduce((sum, r) => sum + r.passed_count, 0),
-            failed_tests: runs.reduce((sum, r) => sum + r.failed_count, 0)
+            failed_tests: runs.reduce((sum, r) => sum + r.failed_count, 0),
           };
           break;
-          
+
         case 'progress':
           if (input.runId) {
             const run = await this.testRailService!.getRun(input.runId);
@@ -1603,27 +1661,27 @@ export class TestRailMCPTools {
             reportData.progress = {
               run,
               completion_rate: ((tests.length - run.untested_count) / tests.length) * 100,
-              pass_rate: (run.passed_count / (run.passed_count + run.failed_count)) * 100
+              pass_rate: (run.passed_count / (run.passed_count + run.failed_count)) * 100,
             };
           }
           break;
-          
+
         case 'activity':
           const allRuns = await this.testRailService!.getRuns(input.projectId, { limit: 50 });
           reportData.activity = {
             recent_runs: allRuns.slice(0, 10),
-            runs_by_day: {} // Placeholder for activity analysis
+            runs_by_day: {}, // Placeholder for activity analysis
           };
           break;
-          
+
         case 'comparison':
           // Placeholder for comparison logic
           reportData.comparison = {
-            note: 'Comparison reports require additional implementation'
+            note: 'Comparison reports require additional implementation',
           };
           break;
       }
-      
+
       return this.createSuccessResponse(reportData, `${input.type} report generated successfully`);
     } catch (error) {
       return this.createErrorResponse(
@@ -1644,8 +1702,8 @@ export class TestRailMCPTools {
     try {
       this.validateConnection();
       const attachment = await this.testRailService!.addAttachment(
-        input.entityType, 
-        input.entityId, 
+        input.entityType,
+        input.entityId,
         input.filePath
       );
       return this.createSuccessResponse({ attachment }, 'Attachment added successfully');
@@ -1664,7 +1722,7 @@ export class TestRailMCPTools {
     try {
       this.validateConnection();
       const attachments = await this.testRailService!.getAttachments(
-        input.entityType, 
+        input.entityType,
         input.entityId
       );
       return this.createSuccessResponse({ attachments });
@@ -1706,7 +1764,7 @@ export class TestRailMCPTools {
         name: input.name,
         email: input.email,
         ...(input.roleId && { role_id: input.roleId }),
-        ...(input.isActive !== undefined && { is_active: input.isActive })
+        ...(input.isActive !== undefined && { is_active: input.isActive }),
       });
       return this.createSuccessResponse({ user }, 'User created successfully');
     } catch (error) {
@@ -1727,7 +1785,7 @@ export class TestRailMCPTools {
         ...(input.name && { name: input.name }),
         ...(input.email && { email: input.email }),
         ...(input.roleId && { role_id: input.roleId }),
-        ...(input.isActive !== undefined && { is_active: input.isActive })
+        ...(input.isActive !== undefined && { is_active: input.isActive }),
       });
       return this.createSuccessResponse({ user }, 'User updated successfully');
     } catch (error) {

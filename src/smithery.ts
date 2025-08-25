@@ -21,7 +21,7 @@ export const configSchema = z.object({
   defaultSuiteId: z.number().default(1).describe('Default suite ID'),
   rateLimitRequestsPerMinute: z.number().default(60).describe('Rate limit requests per minute'),
   cacheTtl: z.number().default(300).describe('Cache TTL in seconds'),
-  timeout: z.number().default(30000).describe('Request timeout in milliseconds')
+  timeout: z.number().default(30000).describe('Request timeout in milliseconds'),
 });
 
 /**
@@ -67,31 +67,31 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             baseUrl: {
               type: 'string',
-              description: 'TestRail instance URL (e.g., https://yourcompany.testrail.io)'
+              description: 'TestRail instance URL (e.g., https://yourcompany.testrail.io)',
             },
             username: {
               type: 'string',
-              description: 'TestRail username (email address)'
+              description: 'TestRail username (email address)',
             },
             apiKey: {
               type: 'string',
-              description: 'TestRail API key'
+              description: 'TestRail API key',
             },
             timeout: {
               type: 'number',
-              description: 'Request timeout in milliseconds (default: 30000)'
-            }
+              description: 'Request timeout in milliseconds (default: 30000)',
+            },
           },
-          required: ['baseUrl', 'username', 'apiKey']
-        }
+          required: ['baseUrl', 'username', 'apiKey'],
+        },
       },
       {
         name: 'test_connection',
         description: 'Test TestRail connection and validate credentials',
         inputSchema: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       },
 
       // Project Management Tools
@@ -103,10 +103,10 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             isCompleted: {
               type: 'boolean',
-              description: 'Filter by completion status'
-            }
-          }
-        }
+              description: 'Filter by completion status',
+            },
+          },
+        },
       },
       {
         name: 'get_project',
@@ -116,11 +116,11 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
-            }
+              description: 'Project ID',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_project',
@@ -130,23 +130,23 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             name: {
               type: 'string',
-              description: 'Project name'
+              description: 'Project name',
             },
             announcement: {
               type: 'string',
-              description: 'Project announcement'
+              description: 'Project announcement',
             },
             showAnnouncement: {
               type: 'boolean',
-              description: 'Show announcement to users'
+              description: 'Show announcement to users',
             },
             suiteMode: {
               type: 'number',
-              description: 'Suite mode (1=single, 2=single+baselines, 3=multiple)'
-            }
+              description: 'Suite mode (1=single, 2=single+baselines, 3=multiple)',
+            },
           },
-          required: ['name']
-        }
+          required: ['name'],
+        },
       },
 
       // Test Case Management Tools
@@ -158,19 +158,19 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID'
+              description: 'Suite ID',
             },
             sectionId: {
               type: 'number',
-              description: 'Section ID (optional)'
-            }
+              description: 'Section ID (optional)',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_case',
@@ -180,35 +180,35 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             sectionId: {
               type: 'number',
-              description: 'Section ID'
+              description: 'Section ID',
             },
             title: {
               type: 'string',
-              description: 'Test case title'
+              description: 'Test case title',
             },
             typeId: {
               type: 'number',
-              description: 'Test case type ID'
+              description: 'Test case type ID',
             },
             priorityId: {
               type: 'number',
-              description: 'Priority ID'
+              description: 'Priority ID',
             },
             estimate: {
               type: 'string',
-              description: 'Time estimate'
+              description: 'Time estimate',
             },
             milestone_id: {
               type: 'number',
-              description: 'Milestone ID'
+              description: 'Milestone ID',
             },
             refs: {
               type: 'string',
-              description: 'References (requirements)'
-            }
+              description: 'References (requirements)',
+            },
           },
-          required: ['sectionId', 'title']
-        }
+          required: ['sectionId', 'title'],
+        },
       },
 
       // Test Run Management Tools
@@ -220,36 +220,36 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             createdAfter: {
               type: 'number',
-              description: 'Created after timestamp'
+              description: 'Created after timestamp',
             },
             createdBefore: {
               type: 'number',
-              description: 'Created before timestamp'
+              description: 'Created before timestamp',
             },
             createdBy: {
               type: 'array',
               items: { type: 'number' },
-              description: 'Created by user IDs'
+              description: 'Created by user IDs',
             },
             isCompleted: {
               type: 'boolean',
-              description: 'Filter by completion status'
+              description: 'Filter by completion status',
             },
             limit: {
               type: 'number',
-              description: 'Limit results'
+              description: 'Limit results',
             },
             offset: {
               type: 'number',
-              description: 'Offset for pagination'
-            }
+              description: 'Offset for pagination',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_run',
@@ -259,36 +259,36 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             name: {
               type: 'string',
-              description: 'Test run name'
+              description: 'Test run name',
             },
             description: {
               type: 'string',
-              description: 'Test run description'
+              description: 'Test run description',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID'
+              description: 'Suite ID',
             },
             milestoneId: {
               type: 'number',
-              description: 'Milestone ID'
+              description: 'Milestone ID',
             },
             assignedtoId: {
               type: 'number',
-              description: 'Assigned user ID'
+              description: 'Assigned user ID',
             },
             caseIds: {
               type: 'array',
               items: { type: 'number' },
-              description: 'Test case IDs to include'
-            }
+              description: 'Test case IDs to include',
+            },
           },
-          required: ['projectId', 'name']
-        }
+          required: ['projectId', 'name'],
+        },
       },
 
       // Reporting Tools
@@ -300,21 +300,21 @@ export default function createServer({ config }: { config: z.infer<typeof config
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             timeframe: {
               type: 'string',
               enum: ['7d', '30d', '90d', 'all'],
-              description: 'Time frame for analytics'
+              description: 'Time frame for analytics',
             },
             includeCharts: {
               type: 'boolean',
-              description: 'Include chart data'
-            }
+              description: 'Include chart data',
+            },
           },
-          required: ['projectId']
-        }
-      }
+          required: ['projectId'],
+        },
+      },
     ];
   };
 
@@ -322,11 +322,11 @@ export default function createServer({ config }: { config: z.infer<typeof config
   server.setRequestHandler(ListToolsRequestSchema, async () => {
     const toolDefinitions = getToolDefinitions();
     return {
-      tools: toolDefinitions.map(tool => ({
+      tools: toolDefinitions.map((tool) => ({
         name: tool.name,
         description: tool.description,
-        inputSchema: tool.inputSchema
-      }))
+        inputSchema: tool.inputSchema,
+      })),
     };
   });
 
@@ -335,13 +335,10 @@ export default function createServer({ config }: { config: z.infer<typeof config
 
     try {
       const toolDefinitions = getToolDefinitions();
-      const tool = toolDefinitions.find(t => t.name === name);
+      const tool = toolDefinitions.find((t) => t.name === name);
 
       if (!tool) {
-        throw new McpError(
-          ErrorCode.MethodNotFound,
-          `Unknown tool: ${name}`
-        );
+        throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
       }
 
       // Route to appropriate tool method
@@ -388,10 +385,7 @@ export default function createServer({ config }: { config: z.infer<typeof config
           break;
 
         default:
-          throw new McpError(
-            ErrorCode.MethodNotFound,
-            `Unknown tool: ${name}`
-          );
+          throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
       }
 
       // Return the result from the tool method

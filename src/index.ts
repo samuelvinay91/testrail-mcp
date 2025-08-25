@@ -73,31 +73,31 @@ class TestRailMCPServer {
           properties: {
             baseUrl: {
               type: 'string',
-              description: 'TestRail instance URL (e.g., https://yourcompany.testrail.io)'
+              description: 'TestRail instance URL (e.g., https://yourcompany.testrail.io)',
             },
             username: {
               type: 'string',
-              description: 'TestRail username (email address)'
+              description: 'TestRail username (email address)',
             },
             apiKey: {
               type: 'string',
-              description: 'TestRail API key'
+              description: 'TestRail API key',
             },
             timeout: {
               type: 'number',
-              description: 'Request timeout in milliseconds (default: 30000)'
-            }
+              description: 'Request timeout in milliseconds (default: 30000)',
+            },
           },
-          required: ['baseUrl', 'username', 'apiKey']
-        }
+          required: ['baseUrl', 'username', 'apiKey'],
+        },
       },
       {
         name: 'test_connection',
         description: 'Test TestRail connection and validate credentials',
         inputSchema: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       },
 
       // Project Management Tools
@@ -109,10 +109,10 @@ class TestRailMCPServer {
           properties: {
             isCompleted: {
               type: 'boolean',
-              description: 'Filter by completion status'
-            }
-          }
-        }
+              description: 'Filter by completion status',
+            },
+          },
+        },
       },
       {
         name: 'get_project',
@@ -122,11 +122,11 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
-            }
+              description: 'Project ID',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_project',
@@ -136,23 +136,23 @@ class TestRailMCPServer {
           properties: {
             name: {
               type: 'string',
-              description: 'Project name'
+              description: 'Project name',
             },
             announcement: {
               type: 'string',
-              description: 'Project announcement'
+              description: 'Project announcement',
             },
             showAnnouncement: {
               type: 'boolean',
-              description: 'Show announcement to users'
+              description: 'Show announcement to users',
             },
             suiteMode: {
               type: 'number',
-              description: 'Suite mode (1=single, 2=single+baselines, 3=multiple)'
-            }
+              description: 'Suite mode (1=single, 2=single+baselines, 3=multiple)',
+            },
           },
-          required: ['name']
-        }
+          required: ['name'],
+        },
       },
 
       // Suite Management Tools
@@ -164,11 +164,11 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
-            }
+              description: 'Project ID',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_suite',
@@ -178,19 +178,19 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             name: {
               type: 'string',
-              description: 'Suite name'
+              description: 'Suite name',
             },
             description: {
               type: 'string',
-              description: 'Suite description'
-            }
+              description: 'Suite description',
+            },
           },
-          required: ['projectId', 'name']
-        }
+          required: ['projectId', 'name'],
+        },
       },
 
       // Section Management Tools
@@ -202,15 +202,15 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID (optional)'
-            }
+              description: 'Suite ID (optional)',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_section',
@@ -220,27 +220,27 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             name: {
               type: 'string',
-              description: 'Section name'
+              description: 'Section name',
             },
             description: {
               type: 'string',
-              description: 'Section description'
+              description: 'Section description',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID'
+              description: 'Suite ID',
             },
             parentId: {
               type: 'number',
-              description: 'Parent section ID'
-            }
+              description: 'Parent section ID',
+            },
           },
-          required: ['projectId', 'name']
-        }
+          required: ['projectId', 'name'],
+        },
       },
 
       // Test Case Management Tools
@@ -252,23 +252,23 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID (optional)'
+              description: 'Suite ID (optional)',
             },
             sectionId: {
               type: 'number',
-              description: 'Section ID (optional)'
+              description: 'Section ID (optional)',
             },
             limit: {
               type: 'number',
-              description: 'Maximum number of cases to return'
+              description: 'Maximum number of cases to return',
             },
             offset: {
               type: 'number',
-              description: 'Number of cases to skip'
+              description: 'Number of cases to skip',
             },
             filter: {
               type: 'object',
@@ -277,28 +277,28 @@ class TestRailMCPServer {
                 priority_id: {
                   type: 'array',
                   items: { type: 'number' },
-                  description: 'Priority IDs to filter by'
+                  description: 'Priority IDs to filter by',
                 },
                 type_id: {
                   type: 'array',
                   items: { type: 'number' },
-                  description: 'Type IDs to filter by'
+                  description: 'Type IDs to filter by',
                 },
                 created_by: {
                   type: 'array',
                   items: { type: 'number' },
-                  description: 'Creator user IDs to filter by'
+                  description: 'Creator user IDs to filter by',
                 },
                 milestone_id: {
                   type: 'array',
                   items: { type: 'number' },
-                  description: 'Milestone IDs to filter by'
-                }
-              }
-            }
+                  description: 'Milestone IDs to filter by',
+                },
+              },
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_case',
@@ -308,47 +308,47 @@ class TestRailMCPServer {
           properties: {
             sectionId: {
               type: 'number',
-              description: 'Section ID where case will be created'
+              description: 'Section ID where case will be created',
             },
             title: {
               type: 'string',
-              description: 'Test case title'
+              description: 'Test case title',
             },
             templateId: {
               type: 'number',
-              description: 'Template ID'
+              description: 'Template ID',
             },
             typeId: {
               type: 'number',
-              description: 'Case type ID'
+              description: 'Case type ID',
             },
             priorityId: {
               type: 'number',
-              description: 'Priority ID'
+              description: 'Priority ID',
             },
             milestoneId: {
               type: 'number',
-              description: 'Milestone ID'
+              description: 'Milestone ID',
             },
             refs: {
               type: 'string',
-              description: 'References (comma-separated)'
+              description: 'References (comma-separated)',
             },
             estimate: {
               type: 'string',
-              description: 'Time estimate'
+              description: 'Time estimate',
             },
             preconditions: {
               type: 'string',
-              description: 'Test preconditions'
+              description: 'Test preconditions',
             },
             steps: {
               type: 'string',
-              description: 'Test steps'
+              description: 'Test steps',
             },
             expectedResult: {
               type: 'string',
-              description: 'Expected result'
+              description: 'Expected result',
             },
             stepsDetailed: {
               type: 'array',
@@ -356,18 +356,18 @@ class TestRailMCPServer {
                 type: 'object',
                 properties: {
                   content: { type: 'string' },
-                  expected: { type: 'string' }
-                }
+                  expected: { type: 'string' },
+                },
               },
-              description: 'Detailed test steps'
+              description: 'Detailed test steps',
             },
             customFields: {
               type: 'object',
-              description: 'Custom field values'
-            }
+              description: 'Custom field values',
+            },
           },
-          required: ['sectionId', 'title']
-        }
+          required: ['sectionId', 'title'],
+        },
       },
       {
         name: 'update_case',
@@ -377,7 +377,7 @@ class TestRailMCPServer {
           properties: {
             caseId: {
               type: 'number',
-              description: 'Test case ID'
+              description: 'Test case ID',
             },
             title: { type: 'string' },
             templateId: { type: 'number' },
@@ -395,14 +395,14 @@ class TestRailMCPServer {
                 type: 'object',
                 properties: {
                   content: { type: 'string' },
-                  expected: { type: 'string' }
-                }
-              }
+                  expected: { type: 'string' },
+                },
+              },
             },
-            customFields: { type: 'object' }
+            customFields: { type: 'object' },
           },
-          required: ['caseId']
-        }
+          required: ['caseId'],
+        },
       },
       {
         name: 'delete_case',
@@ -412,11 +412,11 @@ class TestRailMCPServer {
           properties: {
             caseId: {
               type: 'number',
-              description: 'Test case ID'
-            }
+              description: 'Test case ID',
+            },
           },
-          required: ['caseId']
-        }
+          required: ['caseId'],
+        },
       },
 
       // Test Run Management Tools
@@ -428,31 +428,31 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID (optional)'
+              description: 'Suite ID (optional)',
             },
             isCompleted: {
               type: 'boolean',
-              description: 'Filter by completion status'
+              description: 'Filter by completion status',
             },
             milestoneId: {
               type: 'number',
-              description: 'Milestone ID filter'
+              description: 'Milestone ID filter',
             },
             limit: {
               type: 'number',
-              description: 'Maximum number of runs to return'
+              description: 'Maximum number of runs to return',
             },
             offset: {
               type: 'number',
-              description: 'Number of runs to skip'
-            }
+              description: 'Number of runs to skip',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'create_run',
@@ -462,45 +462,45 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             name: {
               type: 'string',
-              description: 'Run name'
+              description: 'Run name',
             },
             description: {
               type: 'string',
-              description: 'Run description'
+              description: 'Run description',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID'
+              description: 'Suite ID',
             },
             milestoneId: {
               type: 'number',
-              description: 'Milestone ID'
+              description: 'Milestone ID',
             },
             assignedToId: {
               type: 'number',
-              description: 'Assigned user ID'
+              description: 'Assigned user ID',
             },
             includeAll: {
               type: 'boolean',
-              description: 'Include all test cases'
+              description: 'Include all test cases',
             },
             caseIds: {
               type: 'array',
               items: { type: 'number' },
-              description: 'Specific case IDs to include'
+              description: 'Specific case IDs to include',
             },
             configIds: {
               type: 'array',
               items: { type: 'number' },
-              description: 'Configuration IDs'
-            }
+              description: 'Configuration IDs',
+            },
           },
-          required: ['projectId', 'name']
-        }
+          required: ['projectId', 'name'],
+        },
       },
       {
         name: 'update_run',
@@ -510,15 +510,15 @@ class TestRailMCPServer {
           properties: {
             runId: {
               type: 'number',
-              description: 'Run ID'
+              description: 'Run ID',
             },
             name: { type: 'string' },
             description: { type: 'string' },
             milestoneId: { type: 'number' },
-            assignedToId: { type: 'number' }
+            assignedToId: { type: 'number' },
           },
-          required: ['runId']
-        }
+          required: ['runId'],
+        },
       },
       {
         name: 'close_run',
@@ -528,11 +528,11 @@ class TestRailMCPServer {
           properties: {
             runId: {
               type: 'number',
-              description: 'Run ID'
-            }
+              description: 'Run ID',
+            },
           },
-          required: ['runId']
-        }
+          required: ['runId'],
+        },
       },
       {
         name: 'delete_run',
@@ -542,11 +542,11 @@ class TestRailMCPServer {
           properties: {
             runId: {
               type: 'number',
-              description: 'Run ID'
-            }
+              description: 'Run ID',
+            },
           },
-          required: ['runId']
-        }
+          required: ['runId'],
+        },
       },
 
       // Test Execution Tools
@@ -558,23 +558,23 @@ class TestRailMCPServer {
           properties: {
             runId: {
               type: 'number',
-              description: 'Run ID'
+              description: 'Run ID',
             },
             statusId: {
               type: 'number',
-              description: 'Filter by status ID'
+              description: 'Filter by status ID',
             },
             limit: {
               type: 'number',
-              description: 'Maximum number of tests to return'
+              description: 'Maximum number of tests to return',
             },
             offset: {
               type: 'number',
-              description: 'Number of tests to skip'
-            }
+              description: 'Number of tests to skip',
+            },
           },
-          required: ['runId']
-        }
+          required: ['runId'],
+        },
       },
       {
         name: 'add_result',
@@ -584,39 +584,39 @@ class TestRailMCPServer {
           properties: {
             testId: {
               type: 'number',
-              description: 'Test ID (required if not using runId+caseId)'
+              description: 'Test ID (required if not using runId+caseId)',
             },
             runId: {
               type: 'number',
-              description: 'Run ID (required if using caseId)'
+              description: 'Run ID (required if using caseId)',
             },
             caseId: {
               type: 'number',
-              description: 'Case ID (required if using runId)'
+              description: 'Case ID (required if using runId)',
             },
             statusId: {
               type: 'number',
-              description: 'Status ID (1=Passed, 2=Blocked, 3=Untested, 4=Retest, 5=Failed)'
+              description: 'Status ID (1=Passed, 2=Blocked, 3=Untested, 4=Retest, 5=Failed)',
             },
             comment: {
               type: 'string',
-              description: 'Result comment'
+              description: 'Result comment',
             },
             version: {
               type: 'string',
-              description: 'Version tested'
+              description: 'Version tested',
             },
             elapsed: {
               type: 'string',
-              description: 'Time elapsed (e.g., "1m 30s")'
+              description: 'Time elapsed (e.g., "1m 30s")',
             },
             defects: {
               type: 'string',
-              description: 'Associated defects'
+              description: 'Associated defects',
             },
             assignedToId: {
               type: 'number',
-              description: 'Assigned user ID'
+              description: 'Assigned user ID',
             },
             stepResults: {
               type: 'array',
@@ -626,18 +626,18 @@ class TestRailMCPServer {
                   content: { type: 'string' },
                   expected: { type: 'string' },
                   actual: { type: 'string' },
-                  statusId: { type: 'number' }
-                }
+                  statusId: { type: 'number' },
+                },
               },
-              description: 'Step-by-step results'
+              description: 'Step-by-step results',
             },
             customFields: {
               type: 'object',
-              description: 'Custom field values'
-            }
+              description: 'Custom field values',
+            },
           },
-          required: ['statusId']
-        }
+          required: ['statusId'],
+        },
       },
       {
         name: 'add_bulk_results',
@@ -647,7 +647,7 @@ class TestRailMCPServer {
           properties: {
             runId: {
               type: 'number',
-              description: 'Run ID'
+              description: 'Run ID',
             },
             results: {
               type: 'array',
@@ -670,19 +670,19 @@ class TestRailMCPServer {
                         content: { type: 'string' },
                         expected: { type: 'string' },
                         actual: { type: 'string' },
-                        statusId: { type: 'number' }
-                      }
-                    }
+                        statusId: { type: 'number' },
+                      },
+                    },
                   },
-                  customFields: { type: 'object' }
+                  customFields: { type: 'object' },
                 },
-                required: ['statusId']
+                required: ['statusId'],
               },
-              description: 'Array of test results'
-            }
+              description: 'Array of test results',
+            },
           },
-          required: ['runId', 'results']
-        }
+          required: ['runId', 'results'],
+        },
       },
       {
         name: 'get_results',
@@ -692,26 +692,26 @@ class TestRailMCPServer {
           properties: {
             testId: {
               type: 'number',
-              description: 'Test ID (required if not using runId+caseId)'
+              description: 'Test ID (required if not using runId+caseId)',
             },
             runId: {
               type: 'number',
-              description: 'Run ID (required if using caseId)'
+              description: 'Run ID (required if using caseId)',
             },
             caseId: {
               type: 'number',
-              description: 'Case ID (required if using runId)'
+              description: 'Case ID (required if using runId)',
             },
             limit: {
               type: 'number',
-              description: 'Maximum number of results to return'
+              description: 'Maximum number of results to return',
             },
             offset: {
               type: 'number',
-              description: 'Number of results to skip'
-            }
-          }
-        }
+              description: 'Number of results to skip',
+            },
+          },
+        },
       },
 
       // Metadata Tools
@@ -723,34 +723,34 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID (optional, gets all users if not specified)'
-            }
-          }
-        }
+              description: 'Project ID (optional, gets all users if not specified)',
+            },
+          },
+        },
       },
       {
         name: 'get_statuses',
         description: 'Get available test statuses',
         inputSchema: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       },
       {
         name: 'get_priorities',
         description: 'Get available test case priorities',
         inputSchema: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       },
       {
         name: 'get_case_types',
         description: 'Get available test case types',
         inputSchema: {
           type: 'object',
-          properties: {}
-        }
+          properties: {},
+        },
       },
 
       // Advanced Tools
@@ -762,40 +762,40 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID (optional)'
+              description: 'Suite ID (optional)',
             },
             runId: {
               type: 'number',
-              description: 'Run ID (optional)'
+              description: 'Run ID (optional)',
             },
             planId: {
               type: 'number',
-              description: 'Plan ID (optional)'
+              description: 'Plan ID (optional)',
             },
             milestoneId: {
               type: 'number',
-              description: 'Milestone ID (optional)'
+              description: 'Milestone ID (optional)',
             },
             dateRange: {
               type: 'object',
               properties: {
                 start: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
-                end: { type: 'string', description: 'End date (YYYY-MM-DD)' }
+                end: { type: 'string', description: 'End date (YYYY-MM-DD)' },
               },
-              description: 'Date range filter'
+              description: 'Date range filter',
             },
             format: {
               type: 'string',
               enum: ['summary', 'detailed', 'csv', 'json'],
-              description: 'Report format'
-            }
+              description: 'Report format',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'search',
@@ -805,28 +805,28 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             query: {
               type: 'string',
-              description: 'Search query'
+              description: 'Search query',
             },
             entityType: {
               type: 'string',
               enum: ['cases', 'runs', 'results', 'plans', 'milestones'],
-              description: 'Entity type to search'
+              description: 'Entity type to search',
             },
             limit: {
               type: 'number',
-              description: 'Maximum number of results'
+              description: 'Maximum number of results',
             },
             offset: {
               type: 'number',
-              description: 'Number of results to skip'
-            }
+              description: 'Number of results to skip',
+            },
           },
-          required: ['projectId', 'query']
-        }
+          required: ['projectId', 'query'],
+        },
       },
 
       // Advanced Project & Suite Management Tools
@@ -838,40 +838,40 @@ class TestRailMCPServer {
           properties: {
             name: {
               type: 'string',
-              description: 'Project name'
+              description: 'Project name',
             },
             announcement: {
               type: 'string',
-              description: 'Project announcement'
+              description: 'Project announcement',
             },
             showAnnouncement: {
               type: 'boolean',
-              description: 'Show announcement to users'
+              description: 'Show announcement to users',
             },
             suiteMode: {
               type: 'number',
               enum: [1, 2, 3],
-              description: 'Suite mode (1=single, 2=single+baselines, 3=multiple)'
+              description: 'Suite mode (1=single, 2=single+baselines, 3=multiple)',
             },
             template: {
               type: 'object',
               properties: {
                 createDefaultSuites: {
                   type: 'boolean',
-                  description: 'Create default test suites'
+                  description: 'Create default test suites',
                 },
                 createDefaultSections: {
                   type: 'boolean',
-                  description: 'Create default sections'
+                  description: 'Create default sections',
                 },
                 createSampleCases: {
                   type: 'boolean',
-                  description: 'Create sample test cases'
+                  description: 'Create sample test cases',
                 },
                 suiteNames: {
                   type: 'array',
                   items: { type: 'string' },
-                  description: 'Custom suite names'
+                  description: 'Custom suite names',
                 },
                 sectionStructure: {
                   type: 'array',
@@ -882,17 +882,17 @@ class TestRailMCPServer {
                       description: { type: 'string' },
                       subsections: {
                         type: 'array',
-                        items: { type: 'string' }
-                      }
-                    }
+                        items: { type: 'string' },
+                      },
+                    },
                   },
-                  description: 'Section structure definition'
-                }
-              }
-            }
+                  description: 'Section structure definition',
+                },
+              },
+            },
           },
-          required: ['name']
-        }
+          required: ['name'],
+        },
       },
       {
         name: 'analyze_project_structure',
@@ -902,23 +902,23 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID to analyze'
+              description: 'Project ID to analyze',
             },
             includeStatistics: {
               type: 'boolean',
-              description: 'Include detailed statistics'
+              description: 'Include detailed statistics',
             },
             includeCoverage: {
               type: 'boolean',
-              description: 'Include test coverage analysis'
+              description: 'Include test coverage analysis',
             },
             includeRecommendations: {
               type: 'boolean',
-              description: 'Include improvement recommendations'
-            }
+              description: 'Include improvement recommendations',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'bulk_manage_suites',
@@ -928,7 +928,7 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             operations: {
               type: 'array',
@@ -938,35 +938,35 @@ class TestRailMCPServer {
                   type: {
                     type: 'string',
                     enum: ['create', 'update', 'delete', 'archive', 'reorganize'],
-                    description: 'Operation type'
+                    description: 'Operation type',
                   },
                   suiteId: {
                     type: 'number',
-                    description: 'Suite ID (for update/delete operations)'
+                    description: 'Suite ID (for update/delete operations)',
                   },
                   data: {
                     type: 'object',
-                    description: 'Operation data'
+                    description: 'Operation data',
                   },
                   targetPosition: {
                     type: 'number',
-                    description: 'Target position for reorganization'
-                  }
-                }
+                    description: 'Target position for reorganization',
+                  },
+                },
               },
-              description: 'List of operations to perform'
+              description: 'List of operations to perform',
             },
             validateBefore: {
               type: 'boolean',
-              description: 'Validate operations before execution'
+              description: 'Validate operations before execution',
             },
             dryRun: {
               type: 'boolean',
-              description: 'Perform dry run without actual changes'
-            }
+              description: 'Perform dry run without actual changes',
+            },
           },
-          required: ['projectId', 'operations']
-        }
+          required: ['projectId', 'operations'],
+        },
       },
       {
         name: 'create_advanced_suite',
@@ -976,20 +976,20 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             name: {
               type: 'string',
-              description: 'Suite name'
+              description: 'Suite name',
             },
             description: {
               type: 'string',
-              description: 'Suite description'
+              description: 'Suite description',
             },
             template: {
               type: 'string',
               enum: ['functional', 'api', 'performance', 'security', 'mobile', 'custom'],
-              description: 'Suite template type'
+              description: 'Suite template type',
             },
             structure: {
               type: 'object',
@@ -1007,17 +1007,17 @@ class TestRailMCPServer {
                           type: 'object',
                           properties: {
                             name: { type: 'string' },
-                            description: { type: 'string' }
-                          }
-                        }
-                      }
-                    }
+                            description: { type: 'string' },
+                          },
+                        },
+                      },
+                    },
                   },
-                  description: 'Section structure'
+                  description: 'Section structure',
                 },
                 sampleCases: {
                   type: 'boolean',
-                  description: 'Create sample test cases'
+                  description: 'Create sample test cases',
                 },
                 caseTemplates: {
                   type: 'array',
@@ -1028,16 +1028,16 @@ class TestRailMCPServer {
                       type: { type: 'string' },
                       priority: { type: 'string' },
                       steps: { type: 'string' },
-                      expected: { type: 'string' }
-                    }
+                      expected: { type: 'string' },
+                    },
                   },
-                  description: 'Custom case templates'
-                }
-              }
-            }
+                  description: 'Custom case templates',
+                },
+              },
+            },
           },
-          required: ['projectId', 'name']
-        }
+          required: ['projectId', 'name'],
+        },
       },
 
       // Reporting & Analytics Tools
@@ -1049,37 +1049,37 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             timeRange: {
               type: 'object',
               properties: {
                 start: {
                   type: 'string',
-                  description: 'Start date (YYYY-MM-DD)'
+                  description: 'Start date (YYYY-MM-DD)',
                 },
                 end: {
                   type: 'string',
-                  description: 'End date (YYYY-MM-DD)'
-                }
+                  description: 'End date (YYYY-MM-DD)',
+                },
               },
-              description: 'Time range for analysis'
+              description: 'Time range for analysis',
             },
             includeMetrics: {
               type: 'boolean',
-              description: 'Include detailed metrics'
+              description: 'Include detailed metrics',
             },
             includeTrends: {
               type: 'boolean',
-              description: 'Include trend analysis'
+              description: 'Include trend analysis',
             },
             includeTopFailures: {
               type: 'boolean',
-              description: 'Include top failure analysis'
-            }
+              description: 'Include top failure analysis',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'generate_execution_report',
@@ -1089,32 +1089,32 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             runId: {
               type: 'number',
-              description: 'Test run ID (optional)'
+              description: 'Test run ID (optional)',
             },
             planId: {
               type: 'number',
-              description: 'Test plan ID (optional)'
+              description: 'Test plan ID (optional)',
             },
             format: {
               type: 'string',
               enum: ['summary', 'detailed', 'executive'],
-              description: 'Report format'
+              description: 'Report format',
             },
             includeFailureAnalysis: {
               type: 'boolean',
-              description: 'Include failure analysis'
+              description: 'Include failure analysis',
             },
             includePerformanceMetrics: {
               type: 'boolean',
-              description: 'Include performance metrics'
-            }
+              description: 'Include performance metrics',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'analyze_case_metrics',
@@ -1124,37 +1124,37 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID (optional)'
+              description: 'Suite ID (optional)',
             },
             timeRange: {
               type: 'object',
               properties: {
                 start: {
                   type: 'string',
-                  description: 'Start date (YYYY-MM-DD)'
+                  description: 'Start date (YYYY-MM-DD)',
                 },
                 end: {
                   type: 'string',
-                  description: 'End date (YYYY-MM-DD)'
-                }
+                  description: 'End date (YYYY-MM-DD)',
+                },
               },
-              description: 'Time range for analysis'
+              description: 'Time range for analysis',
             },
             includeFlakiness: {
               type: 'boolean',
-              description: 'Include flakiness analysis'
+              description: 'Include flakiness analysis',
             },
             includeExecutionTrends: {
               type: 'boolean',
-              description: 'Include execution trends'
-            }
+              description: 'Include execution trends',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'generate_coverage_report',
@@ -1164,23 +1164,23 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'Project ID'
+              description: 'Project ID',
             },
             suiteId: {
               type: 'number',
-              description: 'Suite ID (optional)'
+              description: 'Suite ID (optional)',
             },
             requirementField: {
               type: 'string',
-              description: 'Custom field containing requirements'
+              description: 'Custom field containing requirements',
             },
             componentField: {
               type: 'string',
-              description: 'Custom field containing components'
-            }
+              description: 'Custom field containing components',
+            },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
 
       // Integration Tools
@@ -1192,7 +1192,7 @@ class TestRailMCPServer {
           properties: {
             projectId: {
               type: 'number',
-              description: 'TestRail project ID'
+              description: 'TestRail project ID',
             },
             testSuite: {
               type: 'object',
@@ -1209,9 +1209,9 @@ class TestRailMCPServer {
                       status: { type: 'string', enum: ['passed', 'failed', 'skipped', 'blocked'] },
                       duration: { type: 'number' },
                       error: { type: 'string' },
-                      metadata: { type: 'object' }
-                    }
-                  }
+                      metadata: { type: 'object' },
+                    },
+                  },
                 },
                 summary: {
                   type: 'object',
@@ -1221,11 +1221,11 @@ class TestRailMCPServer {
                     failed: { type: 'number' },
                     skipped: { type: 'number' },
                     blocked: { type: 'number' },
-                    duration: { type: 'number' }
-                  }
-                }
+                    duration: { type: 'number' },
+                  },
+                },
               },
-              description: 'AutoSpectra test suite data'
+              description: 'AutoSpectra test suite data',
             },
             options: {
               type: 'object',
@@ -1233,13 +1233,13 @@ class TestRailMCPServer {
                 createCasesIfMissing: { type: 'boolean' },
                 milestoneId: { type: 'number' },
                 environment: { type: 'string' },
-                buildNumber: { type: 'string' }
+                buildNumber: { type: 'string' },
               },
-              description: 'Sync options'
-            }
+              description: 'Sync options',
+            },
           },
-          required: ['projectId', 'testSuite']
-        }
+          required: ['projectId', 'testSuite'],
+        },
       },
 
       // Plan Entry Management Tools
@@ -1256,7 +1256,11 @@ class TestRailMCPServer {
             assignedToId: { type: 'number', description: 'Assigned user ID' },
             includeAll: { type: 'boolean', description: 'Include all test cases' },
             caseIds: { type: 'array', items: { type: 'number' }, description: 'Specific case IDs' },
-            configIds: { type: 'array', items: { type: 'number' }, description: 'Configuration IDs' },
+            configIds: {
+              type: 'array',
+              items: { type: 'number' },
+              description: 'Configuration IDs',
+            },
             runs: {
               type: 'array',
               items: {
@@ -1265,14 +1269,14 @@ class TestRailMCPServer {
                   includeAll: { type: 'boolean' },
                   caseIds: { type: 'array', items: { type: 'number' } },
                   configIds: { type: 'array', items: { type: 'number' } },
-                  assignedToId: { type: 'number' }
-                }
+                  assignedToId: { type: 'number' },
+                },
               },
-              description: 'Run configurations'
-            }
+              description: 'Run configurations',
+            },
           },
-          required: ['planId', 'suiteId']
-        }
+          required: ['planId', 'suiteId'],
+        },
       },
       {
         name: 'update_plan_entry',
@@ -1286,10 +1290,10 @@ class TestRailMCPServer {
             description: { type: 'string', description: 'Entry description' },
             assignedToId: { type: 'number', description: 'Assigned user ID' },
             includeAll: { type: 'boolean', description: 'Include all test cases' },
-            caseIds: { type: 'array', items: { type: 'number' }, description: 'Specific case IDs' }
+            caseIds: { type: 'array', items: { type: 'number' }, description: 'Specific case IDs' },
           },
-          required: ['planId', 'entryId']
-        }
+          required: ['planId', 'entryId'],
+        },
       },
       {
         name: 'delete_plan_entry',
@@ -1298,10 +1302,10 @@ class TestRailMCPServer {
           type: 'object',
           properties: {
             planId: { type: 'number', description: 'Test plan ID' },
-            entryId: { type: 'string', description: 'Plan entry ID' }
+            entryId: { type: 'string', description: 'Plan entry ID' },
           },
-          required: ['planId', 'entryId']
-        }
+          required: ['planId', 'entryId'],
+        },
       },
       {
         name: 'get_plan_entries',
@@ -1309,10 +1313,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            planId: { type: 'number', description: 'Test plan ID' }
+            planId: { type: 'number', description: 'Test plan ID' },
           },
-          required: ['planId']
-        }
+          required: ['planId'],
+        },
       },
       {
         name: 'close_plan_entry',
@@ -1321,10 +1325,10 @@ class TestRailMCPServer {
           type: 'object',
           properties: {
             planId: { type: 'number', description: 'Test plan ID' },
-            entryId: { type: 'string', description: 'Plan entry ID' }
+            entryId: { type: 'string', description: 'Plan entry ID' },
           },
-          required: ['planId', 'entryId']
-        }
+          required: ['planId', 'entryId'],
+        },
       },
       {
         name: 'reopen_plan',
@@ -1332,10 +1336,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            planId: { type: 'number', description: 'Test plan ID' }
+            planId: { type: 'number', description: 'Test plan ID' },
           },
-          required: ['planId']
-        }
+          required: ['planId'],
+        },
       },
 
       // Enhanced Milestone Management Tools
@@ -1345,10 +1349,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            milestoneId: { type: 'number', description: 'Milestone ID' }
+            milestoneId: { type: 'number', description: 'Milestone ID' },
           },
-          required: ['milestoneId']
-        }
+          required: ['milestoneId'],
+        },
       },
       {
         name: 'create_milestone',
@@ -1361,10 +1365,10 @@ class TestRailMCPServer {
             description: { type: 'string', description: 'Milestone description' },
             dueOn: { type: 'string', description: 'Due date (YYYY-MM-DD)' },
             parentId: { type: 'number', description: 'Parent milestone ID' },
-            refs: { type: 'string', description: 'References' }
+            refs: { type: 'string', description: 'References' },
           },
-          required: ['projectId', 'name']
-        }
+          required: ['projectId', 'name'],
+        },
       },
       {
         name: 'update_milestone',
@@ -1378,10 +1382,10 @@ class TestRailMCPServer {
             dueOn: { type: 'string', description: 'Due date (YYYY-MM-DD)' },
             isCompleted: { type: 'boolean', description: 'Completion status' },
             isStarted: { type: 'boolean', description: 'Started status' },
-            refs: { type: 'string', description: 'References' }
+            refs: { type: 'string', description: 'References' },
           },
-          required: ['milestoneId']
-        }
+          required: ['milestoneId'],
+        },
       },
       {
         name: 'delete_milestone',
@@ -1389,10 +1393,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            milestoneId: { type: 'number', description: 'Milestone ID' }
+            milestoneId: { type: 'number', description: 'Milestone ID' },
           },
-          required: ['milestoneId']
-        }
+          required: ['milestoneId'],
+        },
       },
       {
         name: 'get_milestone_dependencies',
@@ -1400,10 +1404,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            milestoneId: { type: 'number', description: 'Milestone ID' }
+            milestoneId: { type: 'number', description: 'Milestone ID' },
           },
-          required: ['milestoneId']
-        }
+          required: ['milestoneId'],
+        },
       },
       {
         name: 'update_milestone_dependencies',
@@ -1412,10 +1416,14 @@ class TestRailMCPServer {
           type: 'object',
           properties: {
             milestoneId: { type: 'number', description: 'Milestone ID' },
-            dependencies: { type: 'array', items: { type: 'number' }, description: 'Dependency milestone IDs' }
+            dependencies: {
+              type: 'array',
+              items: { type: 'number' },
+              description: 'Dependency milestone IDs',
+            },
           },
-          required: ['milestoneId', 'dependencies']
-        }
+          required: ['milestoneId', 'dependencies'],
+        },
       },
 
       // Templates & Configurations Tools
@@ -1425,10 +1433,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            projectId: { type: 'number', description: 'Project ID' }
+            projectId: { type: 'number', description: 'Project ID' },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'get_configurations',
@@ -1436,10 +1444,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            projectId: { type: 'number', description: 'Project ID' }
+            projectId: { type: 'number', description: 'Project ID' },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'get_config_groups',
@@ -1447,10 +1455,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            projectId: { type: 'number', description: 'Project ID' }
+            projectId: { type: 'number', description: 'Project ID' },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
 
       // Project Administration Tools
@@ -1465,10 +1473,10 @@ class TestRailMCPServer {
             announcement: { type: 'string', description: 'Project announcement' },
             showAnnouncement: { type: 'boolean', description: 'Show announcement' },
             suiteMode: { type: 'number', description: 'Suite mode' },
-            isCompleted: { type: 'boolean', description: 'Completion status' }
+            isCompleted: { type: 'boolean', description: 'Completion status' },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'delete_project',
@@ -1476,10 +1484,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            projectId: { type: 'number', description: 'Project ID' }
+            projectId: { type: 'number', description: 'Project ID' },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'get_project_permissions',
@@ -1488,10 +1496,10 @@ class TestRailMCPServer {
           type: 'object',
           properties: {
             projectId: { type: 'number', description: 'Project ID' },
-            userId: { type: 'number', description: 'User ID (optional)' }
+            userId: { type: 'number', description: 'User ID (optional)' },
           },
-          required: ['projectId']
-        }
+          required: ['projectId'],
+        },
       },
       {
         name: 'update_project_permissions',
@@ -1501,10 +1509,10 @@ class TestRailMCPServer {
           properties: {
             projectId: { type: 'number', description: 'Project ID' },
             userId: { type: 'number', description: 'User ID' },
-            permissions: { type: 'object', description: 'Permission settings' }
+            permissions: { type: 'object', description: 'Permission settings' },
           },
-          required: ['projectId', 'userId', 'permissions']
-        }
+          required: ['projectId', 'userId', 'permissions'],
+        },
       },
 
       // Enhanced Reporting Tools
@@ -1524,13 +1532,13 @@ class TestRailMCPServer {
                 priority_id: { type: 'array', items: { type: 'number' } },
                 type_id: { type: 'array', items: { type: 'number' } },
                 created_by: { type: 'array', items: { type: 'number' } },
-                milestone_id: { type: 'array', items: { type: 'number' } }
+                milestone_id: { type: 'array', items: { type: 'number' } },
               },
-              description: 'Filter criteria'
-            }
+              description: 'Filter criteria',
+            },
           },
-          required: ['projectId', 'format']
-        }
+          required: ['projectId', 'format'],
+        },
       },
       {
         name: 'export_runs',
@@ -1540,18 +1548,22 @@ class TestRailMCPServer {
           properties: {
             projectId: { type: 'number', description: 'Project ID' },
             runId: { type: 'number', description: 'Specific run ID (optional)' },
-            format: { type: 'string', enum: ['csv', 'xml', 'excel', 'pdf'], description: 'Export format' },
+            format: {
+              type: 'string',
+              enum: ['csv', 'xml', 'excel', 'pdf'],
+              description: 'Export format',
+            },
             includeResults: { type: 'boolean', description: 'Include test results' },
             dateRange: {
               type: 'object',
               properties: {
                 start: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
-                end: { type: 'string', description: 'End date (YYYY-MM-DD)' }
-              }
-            }
+                end: { type: 'string', description: 'End date (YYYY-MM-DD)' },
+              },
+            },
           },
-          required: ['projectId', 'format']
-        }
+          required: ['projectId', 'format'],
+        },
       },
       {
         name: 'get_reports',
@@ -1560,7 +1572,11 @@ class TestRailMCPServer {
           type: 'object',
           properties: {
             projectId: { type: 'number', description: 'Project ID' },
-            type: { type: 'string', enum: ['summary', 'progress', 'activity', 'comparison'], description: 'Report type' },
+            type: {
+              type: 'string',
+              enum: ['summary', 'progress', 'activity', 'comparison'],
+              description: 'Report type',
+            },
             suiteId: { type: 'number', description: 'Suite ID (optional)' },
             runId: { type: 'number', description: 'Run ID (optional)' },
             planId: { type: 'number', description: 'Plan ID (optional)' },
@@ -1569,12 +1585,12 @@ class TestRailMCPServer {
               type: 'object',
               properties: {
                 start: { type: 'string', description: 'Start date (YYYY-MM-DD)' },
-                end: { type: 'string', description: 'End date (YYYY-MM-DD)' }
-              }
-            }
+                end: { type: 'string', description: 'End date (YYYY-MM-DD)' },
+              },
+            },
           },
-          required: ['projectId', 'type']
-        }
+          required: ['projectId', 'type'],
+        },
       },
 
       // Attachments Tools
@@ -1584,13 +1600,17 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            entityType: { type: 'string', enum: ['case', 'result', 'plan', 'run', 'test'], description: 'Entity type' },
+            entityType: {
+              type: 'string',
+              enum: ['case', 'result', 'plan', 'run', 'test'],
+              description: 'Entity type',
+            },
             entityId: { type: 'number', description: 'Entity ID' },
             filePath: { type: 'string', description: 'File path' },
-            fileName: { type: 'string', description: 'File name (optional)' }
+            fileName: { type: 'string', description: 'File name (optional)' },
           },
-          required: ['entityType', 'entityId', 'filePath']
-        }
+          required: ['entityType', 'entityId', 'filePath'],
+        },
       },
       {
         name: 'get_attachments',
@@ -1598,11 +1618,15 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            entityType: { type: 'string', enum: ['case', 'result', 'plan', 'run', 'test'], description: 'Entity type' },
-            entityId: { type: 'number', description: 'Entity ID' }
+            entityType: {
+              type: 'string',
+              enum: ['case', 'result', 'plan', 'run', 'test'],
+              description: 'Entity type',
+            },
+            entityId: { type: 'number', description: 'Entity ID' },
           },
-          required: ['entityType', 'entityId']
-        }
+          required: ['entityType', 'entityId'],
+        },
       },
       {
         name: 'delete_attachment',
@@ -1610,10 +1634,10 @@ class TestRailMCPServer {
         inputSchema: {
           type: 'object',
           properties: {
-            attachmentId: { type: 'number', description: 'Attachment ID' }
+            attachmentId: { type: 'number', description: 'Attachment ID' },
           },
-          required: ['attachmentId']
-        }
+          required: ['attachmentId'],
+        },
       },
 
       // User Management Tools
@@ -1626,10 +1650,10 @@ class TestRailMCPServer {
             name: { type: 'string', description: 'User name' },
             email: { type: 'string', description: 'User email' },
             roleId: { type: 'number', description: 'Role ID (optional)' },
-            isActive: { type: 'boolean', description: 'Active status (optional)' }
+            isActive: { type: 'boolean', description: 'Active status (optional)' },
           },
-          required: ['name', 'email']
-        }
+          required: ['name', 'email'],
+        },
       },
       {
         name: 'update_user',
@@ -1641,11 +1665,11 @@ class TestRailMCPServer {
             name: { type: 'string', description: 'User name' },
             email: { type: 'string', description: 'User email' },
             roleId: { type: 'number', description: 'Role ID' },
-            isActive: { type: 'boolean', description: 'Active status' }
+            isActive: { type: 'boolean', description: 'Active status' },
           },
-          required: ['userId']
-        }
-      }
+          required: ['userId'],
+        },
+      },
     ];
   }
 
@@ -1655,14 +1679,14 @@ class TestRailMCPServer {
   private setupToolHandlers(): void {
     // List available tools
     this.server.setRequestHandler(ListToolsRequestSchema, async () => ({
-      tools: this.getToolDefinitions()
+      tools: this.getToolDefinitions(),
     }));
 
     // Handle tool calls
     this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
       try {
         const { name, arguments: args } = request.params;
-        
+
         console.log(`🔧 Executing tool: ${name}`);
 
         // Route to appropriate tool method
@@ -1834,16 +1858,13 @@ class TestRailMCPServer {
             return await this.tools.updateUser(args as any);
 
           default:
-            throw new McpError(
-              ErrorCode.MethodNotFound,
-              `Unknown tool: ${name}`
-            );
+            throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
         }
       } catch (error) {
         if (error instanceof McpError) {
           throw error;
         }
-        
+
         console.error('❌ Error handling tool request:', error);
         throw new McpError(
           ErrorCode.InternalError,

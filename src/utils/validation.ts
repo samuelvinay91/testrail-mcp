@@ -19,7 +19,11 @@ export class ValidationResult {
     this.errors = errors;
   }
 
-  addError(field: string, message: string, code: string = TestRailErrorCodes.VALIDATION_ERROR): void {
+  addError(
+    field: string,
+    message: string,
+    code: string = TestRailErrorCodes.VALIDATION_ERROR
+  ): void {
     this.errors.push({ field, message, code });
     this.isValid = false;
   }
@@ -31,13 +35,13 @@ export class Validator {
    */
   static validateRequired(obj: any, fields: string[]): ValidationResult {
     const result = new ValidationResult();
-    
+
     for (const field of fields) {
       if (obj[field] === undefined || obj[field] === null || obj[field] === '') {
         result.addError(field, `Field '${field}' is required`);
       }
     }
-    
+
     return result;
   }
 
@@ -46,10 +50,10 @@ export class Validator {
    */
   static validateNumber(obj: any, field: string, min?: number, max?: number): ValidationResult {
     const result = new ValidationResult();
-    
+
     if (obj[field] !== undefined && obj[field] !== null) {
       const value = Number(obj[field]);
-      
+
       if (isNaN(value)) {
         result.addError(field, `Field '${field}' must be a valid number`);
       } else {
@@ -61,19 +65,25 @@ export class Validator {
         }
       }
     }
-    
+
     return result;
   }
 
   /**
    * Validate string fields
    */
-  static validateString(obj: any, field: string, minLength?: number, maxLength?: number, pattern?: RegExp): ValidationResult {
+  static validateString(
+    obj: any,
+    field: string,
+    minLength?: number,
+    maxLength?: number,
+    pattern?: RegExp
+  ): ValidationResult {
     const result = new ValidationResult();
-    
+
     if (obj[field] !== undefined && obj[field] !== null) {
       const value = String(obj[field]);
-      
+
       if (minLength !== undefined && value.length < minLength) {
         result.addError(field, `Field '${field}' must be at least ${minLength} characters long`);
       }
@@ -84,7 +94,7 @@ export class Validator {
         result.addError(field, `Field '${field}' does not match required pattern`);
       }
     }
-    
+
     return result;
   }
 
@@ -94,11 +104,11 @@ export class Validator {
   static validateEmail(email: string): ValidationResult {
     const result = new ValidationResult();
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    
+
     if (!emailPattern.test(email)) {
       result.addError('email', 'Invalid email format');
     }
-    
+
     return result;
   }
 
@@ -107,13 +117,13 @@ export class Validator {
    */
   static validateUrl(url: string): ValidationResult {
     const result = new ValidationResult();
-    
+
     try {
       new URL(url);
     } catch {
       result.addError('url', 'Invalid URL format');
     }
-    
+
     return result;
   }
 
@@ -123,20 +133,28 @@ export class Validator {
   static validateStatusId(statusId: number): ValidationResult {
     const result = new ValidationResult();
     const validStatuses = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    
+
     if (!validStatuses.includes(statusId)) {
-      result.addError('statusId', `Invalid status ID. Valid values are: ${validStatuses.join(', ')}`);
+      result.addError(
+        'statusId',
+        `Invalid status ID. Valid values are: ${validStatuses.join(', ')}`
+      );
     }
-    
+
     return result;
   }
 
   /**
    * Validate array field
    */
-  static validateArray(obj: any, field: string, minLength?: number, maxLength?: number): ValidationResult {
+  static validateArray(
+    obj: any,
+    field: string,
+    minLength?: number,
+    maxLength?: number
+  ): ValidationResult {
     const result = new ValidationResult();
-    
+
     if (obj[field] !== undefined && obj[field] !== null) {
       if (!Array.isArray(obj[field])) {
         result.addError(field, `Field '${field}' must be an array`);
@@ -150,7 +168,7 @@ export class Validator {
         }
       }
     }
-    
+
     return result;
   }
 
@@ -159,13 +177,13 @@ export class Validator {
    */
   static validateObject(obj: any, field: string): ValidationResult {
     const result = new ValidationResult();
-    
+
     if (obj[field] !== undefined && obj[field] !== null) {
       if (typeof obj[field] !== 'object' || Array.isArray(obj[field])) {
         result.addError(field, `Field '${field}' must be an object`);
       }
     }
-    
+
     return result;
   }
 
@@ -174,13 +192,13 @@ export class Validator {
    */
   static validateEnum(obj: any, field: string, validValues: any[]): ValidationResult {
     const result = new ValidationResult();
-    
+
     if (obj[field] !== undefined && obj[field] !== null) {
       if (!validValues.includes(obj[field])) {
         result.addError(field, `Field '${field}' must be one of: ${validValues.join(', ')}`);
       }
     }
-    
+
     return result;
   }
 
@@ -189,14 +207,14 @@ export class Validator {
    */
   static combine(...results: ValidationResult[]): ValidationResult {
     const combined = new ValidationResult();
-    
+
     for (const result of results) {
       if (!result.isValid) {
         combined.isValid = false;
         combined.errors.push(...result.errors);
       }
     }
-    
+
     return combined;
   }
 }

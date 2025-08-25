@@ -22,7 +22,7 @@ import {
   CreateTestRailPlan,
   TestRailSearchOptions,
   TestRailError,
-  TestRailConnectionTest
+  TestRailConnectionTest,
 } from '../types';
 
 /**
@@ -36,19 +36,19 @@ export class TestRailService {
 
   constructor(config: TestRailConfig) {
     this.config = config;
-    
+
     // Create axios instance with base configuration
     this.client = axios.create({
       baseURL: `${config.baseUrl}/index.php?/api/v2`,
       timeout: config.timeout || 30000,
       headers: {
         'Content-Type': 'application/json',
-        'User-Agent': 'TestRail-MCP-Server/1.0.0'
+        'User-Agent': 'TestRail-MCP-Server/1.0.0',
       },
       auth: {
         username: config.username,
-        password: config.apiKey
-      }
+        password: config.apiKey,
+      },
     });
 
     this.setupInterceptors();
@@ -81,7 +81,7 @@ export class TestRailService {
           status: error.response?.status,
           statusText: error.response?.statusText,
           data: error.response?.data,
-          url: error.config?.url
+          url: error.config?.url,
         });
         return Promise.reject(this.handleApiError(error));
       }
@@ -96,17 +96,17 @@ export class TestRailService {
       return {
         error: error.response.data?.error || error.response.statusText || 'Unknown API error',
         code: error.response.status,
-        details: error.response.data
+        details: error.response.data,
       };
     } else if (error.request) {
       return {
         error: 'Network error - unable to reach TestRail server',
-        details: error.message
+        details: error.message,
       };
     } else {
       return {
         error: error.message || 'Unknown error',
-        details: error
+        details: error,
       };
     }
   }
@@ -115,24 +115,16 @@ export class TestRailService {
    * Generic GET request method
    */
   private async get<T>(endpoint: string, params?: any): Promise<T> {
-    try {
-      const response: AxiosResponse<T> = await this.client.get(endpoint, { params });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response: AxiosResponse<T> = await this.client.get(endpoint, { params });
+    return response.data;
   }
 
   /**
    * Generic POST request method
    */
   private async post<T>(endpoint: string, data?: any): Promise<T> {
-    try {
-      const response: AxiosResponse<T> = await this.client.post(endpoint, data);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+    const response: AxiosResponse<T> = await this.client.post(endpoint, data);
+    return response.data;
   }
 
   // ============================================================================
@@ -146,18 +138,18 @@ export class TestRailService {
     try {
       const user = await this.getUserByEmail(this.config.username);
       const apiInfo = await this.getApiInfo();
-      
+
       this.isConnected = true;
       return {
         connected: true,
         user,
-        api_version: apiInfo?.version || 'unknown'
+        api_version: apiInfo?.version || 'unknown',
       };
     } catch (error) {
       this.isConnected = false;
       return {
         connected: false,
-        error: error instanceof Error ? error.message : 'Connection failed'
+        error: error instanceof Error ? error.message : 'Connection failed',
       };
     }
   }
@@ -190,9 +182,9 @@ export class TestRailService {
   /**
    * Add a new project
    */
-  async addProject(data: { 
-    name: string; 
-    announcement?: string; 
+  async addProject(data: {
+    name: string;
+    announcement?: string;
     show_announcement?: boolean;
     suite_mode?: number;
   }): Promise<TestRailProject> {
@@ -202,13 +194,16 @@ export class TestRailService {
   /**
    * Update an existing project
    */
-  async updateProject(projectId: number, data: {
-    name?: string;
-    announcement?: string;
-    show_announcement?: boolean;
-    suite_mode?: number;
-    is_completed?: boolean;
-  }): Promise<TestRailProject> {
+  async updateProject(
+    projectId: number,
+    data: {
+      name?: string;
+      announcement?: string;
+      show_announcement?: boolean;
+      suite_mode?: number;
+      is_completed?: boolean;
+    }
+  ): Promise<TestRailProject> {
     return this.post<TestRailProject>(`/update_project/${projectId}`, data);
   }
 
@@ -240,20 +235,26 @@ export class TestRailService {
   /**
    * Add a new suite
    */
-  async addSuite(projectId: number, data: { 
-    name: string; 
-    description?: string; 
-  }): Promise<TestRailSuite> {
+  async addSuite(
+    projectId: number,
+    data: {
+      name: string;
+      description?: string;
+    }
+  ): Promise<TestRailSuite> {
     return this.post<TestRailSuite>(`/add_suite/${projectId}`, data);
   }
 
   /**
    * Update a suite
    */
-  async updateSuite(suiteId: number, data: { 
-    name?: string; 
-    description?: string; 
-  }): Promise<TestRailSuite> {
+  async updateSuite(
+    suiteId: number,
+    data: {
+      name?: string;
+      description?: string;
+    }
+  ): Promise<TestRailSuite> {
     return this.post<TestRailSuite>(`/update_suite/${suiteId}`, data);
   }
 
@@ -272,7 +273,7 @@ export class TestRailService {
    * Get all sections for a project/suite
    */
   async getSections(projectId: number, suiteId?: number): Promise<TestRailSection[]> {
-    const endpoint = suiteId 
+    const endpoint = suiteId
       ? `/get_sections/${projectId}&suite_id=${suiteId}`
       : `/get_sections/${projectId}`;
     return this.get<TestRailSection[]>(endpoint);
@@ -288,22 +289,28 @@ export class TestRailService {
   /**
    * Add a new section
    */
-  async addSection(projectId: number, data: { 
-    name: string; 
-    description?: string; 
-    suite_id?: number;
-    parent_id?: number;
-  }): Promise<TestRailSection> {
+  async addSection(
+    projectId: number,
+    data: {
+      name: string;
+      description?: string;
+      suite_id?: number;
+      parent_id?: number;
+    }
+  ): Promise<TestRailSection> {
     return this.post<TestRailSection>(`/add_section/${projectId}`, data);
   }
 
   /**
    * Update a section
    */
-  async updateSection(sectionId: number, data: { 
-    name?: string; 
-    description?: string; 
-  }): Promise<TestRailSection> {
+  async updateSection(
+    sectionId: number,
+    data: {
+      name?: string;
+      description?: string;
+    }
+  ): Promise<TestRailSection> {
     return this.post<TestRailSection>(`/update_section/${sectionId}`, data);
   }
 
@@ -321,17 +328,21 @@ export class TestRailService {
   /**
    * Get all test cases for a project/suite
    */
-  async getCases(projectId: number, suiteId?: number, options?: TestRailSearchOptions): Promise<TestRailCase[]> {
-    const endpoint = suiteId 
+  async getCases(
+    projectId: number,
+    suiteId?: number,
+    options?: TestRailSearchOptions
+  ): Promise<TestRailCase[]> {
+    const endpoint = suiteId
       ? `/get_cases/${projectId}&suite_id=${suiteId}`
       : `/get_cases/${projectId}`;
-    
+
     const params = {
       ...options?.filter,
       offset: options?.offset,
-      limit: options?.limit
+      limit: options?.limit,
     };
-    
+
     return this.get<TestRailCase[]>(endpoint, params);
   }
 
@@ -370,7 +381,7 @@ export class TestRailService {
     const data = caseIds ? { case_ids: caseIds } : {};
     return this.post<void>(`/copy_cases_to_section/${toSectionId}`, {
       ...data,
-      section_id: fromSectionId
+      section_id: fromSectionId,
     });
   }
 
@@ -385,9 +396,9 @@ export class TestRailService {
     const params = {
       ...options?.filter,
       offset: options?.offset,
-      limit: options?.limit
+      limit: options?.limit,
     };
-    
+
     return this.get<TestRailRun[]>(`/get_runs/${projectId}`, params);
   }
 
@@ -437,9 +448,9 @@ export class TestRailService {
     const params = {
       ...options?.filter,
       offset: options?.offset,
-      limit: options?.limit
+      limit: options?.limit,
     };
-    
+
     return this.get<TestRailTest[]>(`/get_tests/${runId}`, params);
   }
 
@@ -460,21 +471,25 @@ export class TestRailService {
   async getResults(testId: number, options?: TestRailSearchOptions): Promise<TestRailResult[]> {
     const params = {
       offset: options?.offset,
-      limit: options?.limit
+      limit: options?.limit,
     };
-    
+
     return this.get<TestRailResult[]>(`/get_results/${testId}`, params);
   }
 
   /**
    * Get all results for a test case across runs
    */
-  async getResultsForCase(runId: number, caseId: number, options?: TestRailSearchOptions): Promise<TestRailResult[]> {
+  async getResultsForCase(
+    runId: number,
+    caseId: number,
+    options?: TestRailSearchOptions
+  ): Promise<TestRailResult[]> {
     const params = {
       offset: options?.offset,
-      limit: options?.limit
+      limit: options?.limit,
     };
-    
+
     return this.get<TestRailResult[]>(`/get_results_for_case/${runId}/${caseId}`, params);
   }
 
@@ -488,21 +503,31 @@ export class TestRailService {
   /**
    * Add a test result for a case
    */
-  async addResultForCase(runId: number, caseId: number, data: CreateTestRailResult): Promise<TestRailResult> {
+  async addResultForCase(
+    runId: number,
+    caseId: number,
+    data: CreateTestRailResult
+  ): Promise<TestRailResult> {
     return this.post<TestRailResult>(`/add_result_for_case/${runId}/${caseId}`, data);
   }
 
   /**
    * Add multiple results to a run
    */
-  async addResults(runId: number, results: Array<{ test_id: number } & CreateTestRailResult>): Promise<TestRailResult[]> {
+  async addResults(
+    runId: number,
+    results: Array<{ test_id: number } & CreateTestRailResult>
+  ): Promise<TestRailResult[]> {
     return this.post<TestRailResult[]>(`/add_results/${runId}`, { results });
   }
 
   /**
    * Add multiple results for cases
    */
-  async addResultsForCases(runId: number, results: Array<{ case_id: number } & CreateTestRailResult>): Promise<TestRailResult[]> {
+  async addResultsForCases(
+    runId: number,
+    results: Array<{ case_id: number } & CreateTestRailResult>
+  ): Promise<TestRailResult[]> {
     return this.post<TestRailResult[]>(`/add_results_for_cases/${runId}`, { results });
   }
 
@@ -517,9 +542,9 @@ export class TestRailService {
     const params = {
       ...options?.filter,
       offset: options?.offset,
-      limit: options?.limit
+      limit: options?.limit,
     };
-    
+
     return this.get<TestRailPlan[]>(`/get_plans/${projectId}`, params);
   }
 
@@ -561,34 +586,41 @@ export class TestRailService {
   /**
    * Add plan entry
    */
-  async addPlanEntry(planId: number, data: {
-    suite_id: number;
-    name?: string;
-    description?: string;
-    assignedto_id?: number;
-    include_all?: boolean;
-    case_ids?: number[];
-    config_ids?: number[];
-    runs?: Array<{
+  async addPlanEntry(
+    planId: number,
+    data: {
+      suite_id: number;
+      name?: string;
+      description?: string;
+      assignedto_id?: number;
       include_all?: boolean;
       case_ids?: number[];
       config_ids?: number[];
-      assignedto_id?: number;
-    }>;
-  }): Promise<any> {
+      runs?: Array<{
+        include_all?: boolean;
+        case_ids?: number[];
+        config_ids?: number[];
+        assignedto_id?: number;
+      }>;
+    }
+  ): Promise<any> {
     return this.post<any>(`/add_plan_entry/${planId}`, data);
   }
 
   /**
    * Update plan entry
    */
-  async updatePlanEntry(planId: number, entryId: string, data: {
-    name?: string;
-    description?: string;
-    assignedto_id?: number;
-    include_all?: boolean;
-    case_ids?: number[];
-  }): Promise<any> {
+  async updatePlanEntry(
+    planId: number,
+    entryId: string,
+    data: {
+      name?: string;
+      description?: string;
+      assignedto_id?: number;
+      include_all?: boolean;
+      case_ids?: number[];
+    }
+  ): Promise<any> {
     return this.post<any>(`/update_plan_entry/${planId}/${entryId}`, data);
   }
 
@@ -620,7 +652,10 @@ export class TestRailService {
   /**
    * Get all milestones for a project
    */
-  async getMilestones(projectId: number, options?: { is_completed?: 0 | 1, is_started?: 0 | 1 }): Promise<TestRailMilestone[]> {
+  async getMilestones(
+    projectId: number,
+    options?: { is_completed?: 0 | 1; is_started?: 0 | 1 }
+  ): Promise<TestRailMilestone[]> {
     return this.get<TestRailMilestone[]>(`/get_milestones/${projectId}`, options);
   }
 
@@ -634,27 +669,33 @@ export class TestRailService {
   /**
    * Add a new milestone
    */
-  async addMilestone(projectId: number, data: {
-    name: string;
-    description?: string;
-    due_on?: number;
-    parent_id?: number;
-    refs?: string;
-  }): Promise<TestRailMilestone> {
+  async addMilestone(
+    projectId: number,
+    data: {
+      name: string;
+      description?: string;
+      due_on?: number;
+      parent_id?: number;
+      refs?: string;
+    }
+  ): Promise<TestRailMilestone> {
     return this.post<TestRailMilestone>(`/add_milestone/${projectId}`, data);
   }
 
   /**
    * Update a milestone
    */
-  async updateMilestone(milestoneId: number, data: {
-    name?: string;
-    description?: string;
-    due_on?: number;
-    is_completed?: boolean;
-    is_started?: boolean;
-    refs?: string;
-  }): Promise<TestRailMilestone> {
+  async updateMilestone(
+    milestoneId: number,
+    data: {
+      name?: string;
+      description?: string;
+      due_on?: number;
+      is_completed?: boolean;
+      is_started?: boolean;
+      refs?: string;
+    }
+  ): Promise<TestRailMilestone> {
     return this.post<TestRailMilestone>(`/update_milestone/${milestoneId}`, data);
   }
 
@@ -748,12 +789,15 @@ export class TestRailService {
   /**
    * Update an existing user
    */
-  async updateUser(userId: number, data: {
-    name?: string;
-    email?: string;
-    role_id?: number;
-    is_active?: boolean;
-  }): Promise<TestRailUser> {
+  async updateUser(
+    userId: number,
+    data: {
+      name?: string;
+      email?: string;
+      role_id?: number;
+      is_active?: boolean;
+    }
+  ): Promise<TestRailUser> {
     return this.post<TestRailUser>(`/update_user/${userId}`, data);
   }
 
@@ -796,19 +840,19 @@ export class TestRailService {
    */
   updateConfig(newConfig: Partial<TestRailConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    
+
     // Update axios instance with new config
     if (newConfig.baseUrl) {
       this.client.defaults.baseURL = `${newConfig.baseUrl}/index.php?/api/v2`;
     }
-    
+
     if (newConfig.username || newConfig.apiKey) {
       this.client.defaults.auth = {
         username: newConfig.username || this.config.username,
-        password: newConfig.apiKey || this.config.apiKey
+        password: newConfig.apiKey || this.config.apiKey,
       };
     }
-    
+
     if (newConfig.timeout) {
       this.client.defaults.timeout = newConfig.timeout;
     }
@@ -821,6 +865,7 @@ export class TestRailService {
    * Get current configuration (without sensitive data)
    */
   getConfig(): Omit<TestRailConfig, 'apiKey'> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { apiKey, ...safeConfig } = this.config;
     return safeConfig;
   }

@@ -17,23 +17,29 @@ export interface TestRailMCPTool extends Tool {
 
 // Common MCP Response Structure
 export interface TestRailMCPResponse extends CallToolResult {
-  content: Array<{
-    type: 'text';
-    text: string;
-  } | {
-    type: 'image';
-    data: string;
-    mimeType: string;
-  } | {
-    type: 'resource';
-    resource: {
-      uri: string;
-      text: string;
-    } | {
-      uri: string;
-      blob: string;
-    };
-  }>;
+  content: Array<
+    | {
+        type: 'text';
+        text: string;
+      }
+    | {
+        type: 'image';
+        data: string;
+        mimeType: string;
+      }
+    | {
+        type: 'resource';
+        resource:
+          | {
+              uri: string;
+              text: string;
+            }
+          | {
+              uri: string;
+              blob: string;
+            };
+      }
+  >;
   isError?: boolean;
 }
 
@@ -590,7 +596,7 @@ export enum TestRailErrorCodes {
   RATE_LIMITED = 'RATE_LIMITED',
   API_ERROR = 'API_ERROR',
   INTERNAL_ERROR = 'INTERNAL_ERROR',
-  VALIDATION_ERROR = 'VALIDATION_ERROR'
+  VALIDATION_ERROR = 'VALIDATION_ERROR',
 }
 
 // Validation Schema Types

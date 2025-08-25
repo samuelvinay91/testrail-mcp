@@ -12,7 +12,7 @@ import {
   TestRailStats,
   TestRailExecutionSummary,
   TestRailErrorCodes,
-  CreateTestRailRun
+  CreateTestRailRun,
 } from '../types';
 
 export class TestRunResultManager {
@@ -52,7 +52,7 @@ export class TestRunResultManager {
         ...(params.assignedToId && { assignedto_id: params.assignedToId }),
         include_all: params.includeAll ?? true,
         ...(params.caseIds && { case_ids: params.caseIds }),
-        ...(params.configIds && { config_ids: params.configIds })
+        ...(params.configIds && { config_ids: params.configIds }),
       };
 
       // Create the run
@@ -62,20 +62,22 @@ export class TestRunResultManager {
       const tests = await this.testRailService.getTests(run.id);
       const stats = this.calculateRunStats(run);
 
-      return this.createSuccessResponse({
-        run,
-        tests: {
-          total: tests.length,
-          untested: tests.filter(t => t.status_id === 3).length,
-          summary: stats
+      return this.createSuccessResponse(
+        {
+          run,
+          tests: {
+            total: tests.length,
+            untested: tests.filter((t) => t.status_id === 3).length,
+            summary: stats,
+          },
+          metadata: {
+            environment: params.environment,
+            buildVersion: params.buildVersion,
+            tags: params.tags,
+          },
         },
-        metadata: {
-          environment: params.environment,
-          buildVersion: params.buildVersion,
-          tags: params.tags
-        }
-      }, 'Advanced test run created successfully');
-
+        'Advanced test run created successfully'
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to create test run',
@@ -114,7 +116,7 @@ export class TestRunResultManager {
     };
   }): Promise<CallToolResult> {
     try {
-      const processedResults = params.results.map(result => {
+      const processedResults = params.results.map((result) => {
         const statusId = this.mapAutomationStatus(result.status);
         const comment = this.buildAutomationComment(result, params.executionMetadata);
         const elapsed = result.duration ? this.formatDuration(result.duration) : undefined;
@@ -126,7 +128,7 @@ export class TestRunResultManager {
           version: params.executionMetadata?.buildNumber,
           custom_automation_status: result.status,
           custom_automation_tool: result.automationTool,
-          custom_environment: result.environment || params.executionMetadata?.environment
+          custom_environment: result.environment || params.executionMetadata?.environment,
         };
 
         if (result.testId) {
@@ -147,8 +149,8 @@ export class TestRunResultManager {
 
       const allResults = [];
       for (const batch of batches) {
-        const hasTestIds = batch.some(r => r.test_id);
-        const hasCaseIds = batch.some(r => r.case_id);
+        const hasTestIds = batch.some((r) => r.test_id);
+        const hasCaseIds = batch.some((r) => r.case_id);
 
         let batchResults;
         if (hasTestIds && !hasCaseIds) {
@@ -165,13 +167,15 @@ export class TestRunResultManager {
       // Calculate execution summary
       const summary = this.calculateExecutionSummary(allResults, params.executionMetadata);
 
-      return this.createSuccessResponse({
-        submitted: allResults.length,
-        batches: batches.length,
-        summary,
-        metadata: params.executionMetadata
-      }, `Successfully submitted ${allResults.length} automation results`);
-
+      return this.createSuccessResponse(
+        {
+          submitted: allResults.length,
+          batches: batches.length,
+          summary,
+          metadata: params.executionMetadata,
+        },
+        `Successfully submitted ${allResults.length} automation results`
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to submit automation results',
@@ -197,7 +201,7 @@ export class TestRunResultManager {
       const results = {
         updated: 0,
         failed: 0,
-        errors: [] as Array<{ operation: number; error: string }>
+        errors: [] as Array<{ operation: number; error: string }>,
       };
 
       // Process each operation
@@ -209,7 +213,11 @@ export class TestRunResultManager {
               if (operation.testId) {
                 await this.testRailService.addResult(operation.testId, operation.data);
               } else if (operation.caseId) {
-                await this.testRailService.addResultForCase(params.runId, operation.caseId, operation.data);
+                await this.testRailService.addResultForCase(
+                  params.runId,
+                  operation.caseId,
+                  operation.data
+                );
               }
               results.updated++;
               break;
@@ -226,7 +234,7 @@ export class TestRunResultManager {
           results.failed++;
           results.errors.push({
             operation: i,
-            error: error instanceof Error ? error.message : 'Unknown error'
+            error: error instanceof Error ? error.message : 'Unknown error',
           });
         }
       }
@@ -238,17 +246,19 @@ export class TestRunResultManager {
         } catch (error) {
           results.errors.push({
             operation: -1,
-            error: `Failed to close run: ${error instanceof Error ? error.message : 'Unknown error'}`
+            error: `Failed to close run: ${error instanceof Error ? error.message : 'Unknown error'}`,
           });
         }
       }
 
-      return this.createSuccessResponse({
-        runId: params.runId,
-        results,
-        closed: params.closeRun
-      }, `Bulk update completed: ${results.updated} successful, ${results.failed} failed`);
-
+      return this.createSuccessResponse(
+        {
+          runId: params.runId,
+          results,
+          closed: params.closeRun,
+        },
+        `Bulk update completed: ${results.updated} successful, ${results.failed} failed`
+      );
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Bulk update failed',
@@ -270,14 +280,14 @@ export class TestRunResultManager {
       // Get run details
       const run = await this.testRailService.getRun(params.runId);
       const tests = await this.testRailService.getTests(params.runId);
-      
+
       // Get results for detailed analysis
       const allResults = [];
       if (params.includeDetails) {
         for (const test of tests) {
           try {
             const results = await this.testRailService.getResults(test.id, { limit: 10 });
-            allResults.push(...results.map(r => ({ ...r, test_title: test.title })));
+            allResults.push(...results.map((r) => ({ ...r, test_title: test.title })));
           } catch (error) {
             // Continue if we can't get results for a specific test
           }
@@ -285,7 +295,9 @@ export class TestRunResultManager {
       }
 
       const stats = this.calculateRunStats(run);
-      const timeline = params.includeTimeline ? this.generateExecutionTimeline(allResults) : undefined;
+      const timeline = params.includeTimeline
+        ? this.generateExecutionTimeline(allResults)
+        : undefined;
 
       const report = {
         run: {
@@ -296,24 +308,25 @@ export class TestRunResultManager {
           suite_id: run.suite_id,
           is_completed: run.is_completed,
           created_on: new Date(run.created_on * 1000).toISOString(),
-          completed_on: run.completed_on ? new Date(run.completed_on * 1000).toISOString() : null
+          completed_on: run.completed_on ? new Date(run.completed_on * 1000).toISOString() : null,
         },
         statistics: stats,
         tests: {
           total: tests.length,
           by_status: this.groupTestsByStatus(tests),
-          by_priority: this.groupTestsByPriority(tests)
+          by_priority: this.groupTestsByPriority(tests),
         },
         timeline,
-        details: params.includeDetails ? {
-          recent_results: allResults.slice(0, 50),
-          failure_analysis: this.analyzeFailures(allResults)
-        } : undefined,
-        generated_at: new Date().toISOString()
+        details: params.includeDetails
+          ? {
+              recent_results: allResults.slice(0, 50),
+              failure_analysis: this.analyzeFailures(allResults),
+            }
+          : undefined,
+        generated_at: new Date().toISOString(),
       };
 
       return this.createSuccessResponse(report, 'Execution report generated successfully');
-
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to generate execution report',
@@ -334,12 +347,12 @@ export class TestRunResultManager {
     try {
       const [baselineRun, currentRun] = await Promise.all([
         this.testRailService.getRun(params.baselineRunId),
-        this.testRailService.getRun(params.currentRunId)
+        this.testRailService.getRun(params.currentRunId),
       ]);
 
       const [baselineTests, currentTests] = await Promise.all([
         this.testRailService.getTests(params.baselineRunId),
-        this.testRailService.getTests(params.currentRunId)
+        this.testRailService.getTests(params.currentRunId),
       ]);
 
       const comparison = this.performRunComparison(
@@ -352,19 +365,18 @@ export class TestRunResultManager {
       const analysis = {
         baseline: {
           run: baselineRun,
-          stats: this.calculateRunStats(baselineRun)
+          stats: this.calculateRunStats(baselineRun),
         },
         current: {
           run: currentRun,
-          stats: this.calculateRunStats(currentRun)
+          stats: this.calculateRunStats(currentRun),
         },
         comparison,
         regression_indicators: this.detectRegressions(comparison),
-        improvement_indicators: this.detectImprovements(comparison)
+        improvement_indicators: this.detectImprovements(comparison),
       };
 
       return this.createSuccessResponse(analysis, 'Run comparison completed successfully');
-
     } catch (error) {
       return this.createErrorResponse(
         error instanceof Error ? error.message : 'Failed to compare runs',
@@ -377,7 +389,7 @@ export class TestRunResultManager {
 
   private buildRunDescription(params: any): string {
     let description = params.description || '';
-    
+
     if (params.environment) {
       description += `\nEnvironment: ${params.environment}`;
     }
@@ -387,43 +399,48 @@ export class TestRunResultManager {
     if (params.tags && params.tags.length > 0) {
       description += `\nTags: ${params.tags.join(', ')}`;
     }
-    
+
     return description.trim();
   }
 
   private mapAutomationStatus(status: string): number {
     switch (status.toLowerCase()) {
-      case 'passed': return 1;
-      case 'failed': return 5;
-      case 'skipped': return 2;
-      case 'blocked': return 2;
-      default: return 3; // Untested
+      case 'passed':
+        return 1;
+      case 'failed':
+        return 5;
+      case 'skipped':
+        return 2;
+      case 'blocked':
+        return 2;
+      default:
+        return 3; // Untested
     }
   }
 
   private buildAutomationComment(result: any, metadata?: any): string {
     let comment = result.comment || `Automated test ${result.status}`;
-    
+
     if (result.errorMessage) {
       comment += `\n\nError: ${result.errorMessage}`;
     }
-    
+
     if (result.automationTool) {
       comment += `\nTool: ${result.automationTool}`;
     }
-    
+
     if (metadata?.executor) {
       comment += `\nExecutor: ${metadata.executor}`;
     }
-    
+
     if (result.screenshots && result.screenshots.length > 0) {
       comment += `\nScreenshots: ${result.screenshots.length} files`;
     }
-    
+
     if (result.logs && result.logs.length > 0) {
       comment += `\nLogs: ${result.logs.length} files`;
     }
-    
+
     return comment;
   }
 
@@ -436,9 +453,13 @@ export class TestRunResultManager {
   }
 
   private calculateRunStats(run: TestRailRun): TestRailStats {
-    const total = run.passed_count + run.failed_count + run.blocked_count + 
-                 run.untested_count + run.retest_count;
-    
+    const total =
+      run.passed_count +
+      run.failed_count +
+      run.blocked_count +
+      run.untested_count +
+      run.retest_count;
+
     return {
       total_tests: total,
       passed: run.passed_count,
@@ -447,15 +468,21 @@ export class TestRunResultManager {
       untested: run.untested_count,
       retest: run.retest_count,
       pass_rate: total > 0 ? (run.passed_count / total) * 100 : 0,
-      completion_rate: total > 0 ? ((total - run.untested_count) / total) * 100 : 0
+      completion_rate: total > 0 ? ((total - run.untested_count) / total) * 100 : 0,
     };
   }
 
-  private calculateExecutionSummary(results: TestRailResult[], metadata?: any): TestRailExecutionSummary {
-    const statusCounts = results.reduce((acc, result) => {
-      acc[result.status_id] = (acc[result.status_id] || 0) + 1;
-      return acc;
-    }, {} as Record<number, number>);
+  private calculateExecutionSummary(
+    results: TestRailResult[],
+    metadata?: any
+  ): TestRailExecutionSummary {
+    const statusCounts = results.reduce(
+      (acc, result) => {
+        acc[result.status_id] = (acc[result.status_id] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>
+    );
 
     return {
       run_id: results[0]?.test_id || 0,
@@ -470,56 +497,62 @@ export class TestRunResultManager {
         untested: statusCounts[3] || 0,
         retest: statusCounts[4] || 0,
         pass_rate: results.length > 0 ? ((statusCounts[1] || 0) / results.length) * 100 : 0,
-        completion_rate: 100
+        completion_rate: 100,
       },
       start_date: metadata?.startTime || new Date().toISOString(),
       end_date: metadata?.endTime || new Date().toISOString(),
       duration: metadata?.duration,
-      assigned_to: metadata?.executor
+      assigned_to: metadata?.executor,
     };
   }
 
   private generateExecutionTimeline(results: TestRailResult[]): any[] {
     const timeline = results
       .sort((a, b) => a.created_on - b.created_on)
-      .map(result => ({
+      .map((result) => ({
         timestamp: new Date(result.created_on * 1000).toISOString(),
         test_id: result.test_id,
         status: result.status_id,
-        comment: result.comment?.substring(0, 100)
+        comment: result.comment?.substring(0, 100),
       }));
 
     return timeline.slice(0, 100); // Limit to last 100 entries
   }
 
   private groupTestsByStatus(tests: TestRailTest[]): Record<number, number> {
-    return tests.reduce((acc, test) => {
-      acc[test.status_id] = (acc[test.status_id] || 0) + 1;
-      return acc;
-    }, {} as Record<number, number>);
+    return tests.reduce(
+      (acc, test) => {
+        acc[test.status_id] = (acc[test.status_id] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>
+    );
   }
 
   private groupTestsByPriority(tests: TestRailTest[]): Record<number, number> {
-    return tests.reduce((acc, test) => {
-      acc[test.priority_id] = (acc[test.priority_id] || 0) + 1;
-      return acc;
-    }, {} as Record<number, number>);
+    return tests.reduce(
+      (acc, test) => {
+        acc[test.priority_id] = (acc[test.priority_id] || 0) + 1;
+        return acc;
+      },
+      {} as Record<number, number>
+    );
   }
 
   private analyzeFailures(results: TestRailResult[]): any {
-    const failures = results.filter(r => r.status_id === 5);
-    
+    const failures = results.filter((r) => r.status_id === 5);
+
     return {
       total_failures: failures.length,
       common_error_patterns: this.findCommonErrorPatterns(failures),
-      failure_trend: this.calculateFailureTrend(failures)
+      failure_trend: this.calculateFailureTrend(failures),
     };
   }
 
   private findCommonErrorPatterns(failures: TestRailResult[]): any[] {
     const patterns = new Map<string, number>();
-    
-    failures.forEach(failure => {
+
+    failures.forEach((failure) => {
       if (failure.comment) {
         // Extract error patterns (simplified)
         const errorMatch = failure.comment.match(/Error: (.+?)(\n|$)/);
@@ -538,14 +571,14 @@ export class TestRunResultManager {
 
   private calculateFailureTrend(failures: TestRailResult[]): string {
     if (failures.length < 2) return 'insufficient_data';
-    
+
     const sorted = failures.sort((a, b) => a.created_on - b.created_on);
     const recent = sorted.slice(-Math.floor(sorted.length / 2));
     const older = sorted.slice(0, Math.floor(sorted.length / 2));
-    
+
     const recentRate = recent.length / sorted.length;
     const olderRate = older.length / sorted.length;
-    
+
     if (recentRate > olderRate * 1.2) return 'increasing';
     if (recentRate < olderRate * 0.8) return 'decreasing';
     return 'stable';
@@ -557,14 +590,14 @@ export class TestRunResultManager {
     includeNew?: boolean,
     includeMissing?: boolean
   ): any {
-    const baselineMap = new Map(baselineTests.map(t => [t.case_id, t]));
-    const currentMap = new Map(currentTests.map(t => [t.case_id, t]));
-    
+    const baselineMap = new Map(baselineTests.map((t) => [t.case_id, t]));
+    const currentMap = new Map(currentTests.map((t) => [t.case_id, t]));
+
     const common = [];
     const newTests = [];
     const missingTests = [];
     const statusChanges = [];
-    
+
     // Analyze common tests
     for (const [caseId, currentTest] of currentMap) {
       const baselineTest = baselineMap.get(caseId);
@@ -573,43 +606,43 @@ export class TestRunResultManager {
           case_id: caseId,
           baseline_status: baselineTest.status_id,
           current_status: currentTest.status_id,
-          status_changed: baselineTest.status_id !== currentTest.status_id
+          status_changed: baselineTest.status_id !== currentTest.status_id,
         });
-        
+
         if (baselineTest.status_id !== currentTest.status_id) {
           statusChanges.push({
             case_id: caseId,
             from: baselineTest.status_id,
             to: currentTest.status_id,
-            is_regression: baselineTest.status_id === 1 && currentTest.status_id === 5
+            is_regression: baselineTest.status_id === 1 && currentTest.status_id === 5,
           });
         }
       } else if (includeNew) {
         newTests.push({
           case_id: caseId,
-          status: currentTest.status_id
+          status: currentTest.status_id,
         });
       }
     }
-    
+
     // Find missing tests
     if (includeMissing) {
       for (const [caseId, baselineTest] of baselineMap) {
         if (!currentMap.has(caseId)) {
           missingTests.push({
             case_id: caseId,
-            baseline_status: baselineTest.status_id
+            baseline_status: baselineTest.status_id,
           });
         }
       }
     }
-    
+
     return {
       common_tests: common.length,
       status_changes: statusChanges,
       new_tests: newTests,
       missing_tests: missingTests,
-      regression_count: statusChanges.filter(c => c.is_regression).length
+      regression_count: statusChanges.filter((c) => c.is_regression).length,
     };
   }
 
@@ -620,7 +653,7 @@ export class TestRunResultManager {
         case_id: change.case_id,
         type: 'status_regression',
         severity: 'high',
-        description: `Test case ${change.case_id} regressed from passed to failed`
+        description: `Test case ${change.case_id} regressed from passed to failed`,
       }));
   }
 
@@ -630,35 +663,47 @@ export class TestRunResultManager {
       .map((change: any) => ({
         case_id: change.case_id,
         type: 'status_improvement',
-        description: `Test case ${change.case_id} improved from failed to passed`
+        description: `Test case ${change.case_id} improved from failed to passed`,
       }));
   }
 
   private createSuccessResponse(data: any, message?: string): CallToolResult {
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          success: true,
-          data,
-          message: message || 'Operation completed successfully'
-        }, null, 2)
-      }]
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(
+            {
+              success: true,
+              data,
+              message: message || 'Operation completed successfully',
+            },
+            null,
+            2
+          ),
+        },
+      ],
     };
   }
 
   private createErrorResponse(error: string, code?: string): CallToolResult {
     return {
-      content: [{
-        type: 'text',
-        text: JSON.stringify({
-          success: false,
-          error,
-          code: code || TestRailErrorCodes.INTERNAL_ERROR,
-          timestamp: new Date().toISOString()
-        }, null, 2)
-      }],
-      isError: true
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(
+            {
+              success: false,
+              error,
+              code: code || TestRailErrorCodes.INTERNAL_ERROR,
+              timestamp: new Date().toISOString(),
+            },
+            null,
+            2
+          ),
+        },
+      ],
+      isError: true,
     };
   }
 }

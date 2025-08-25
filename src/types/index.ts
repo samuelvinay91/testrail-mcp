@@ -1,6 +1,6 @@
 /**
  * TestRail MCP Server - Type Definitions Index
- * 
+ *
  * This file exports all type definitions used throughout the TestRail MCP Server.
  */
 
@@ -34,7 +34,7 @@ export type {
   TestRailSearchOptions,
   TestRailFilter,
   TestRailStats,
-  TestRailError
+  TestRailError,
 } from './testrail';
 
 export type {
@@ -51,7 +51,7 @@ export type {
   EntityResponse,
   BulkResponse,
   ReportResponse,
-  MCPServerConfig
+  MCPServerConfig,
 } from './mcp';
 
 // Export constants
@@ -59,9 +59,7 @@ export {
   TestRailStatusIds,
   TestRailPriorityIds,
   TestRailCaseTypeIds,
-  TestRailSuiteModes
+  TestRailSuiteModes,
 } from './testrail';
 
-export {
-  TestRailErrorCodes
-} from './mcp';
+export { TestRailErrorCodes } from './mcp';
